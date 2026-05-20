@@ -39,7 +39,7 @@ models:
       top_p: 0.95
       max_tokens: 512
 
-    enabled: false
+    enabled: true
 
   - name: UnslopNemo-12B
     model_id: thedrummer/unslopnemo-12b
@@ -50,7 +50,7 @@ models:
       top_p: 0.92
       max_tokens: 512
 
-    enabled: false
+    enabled: true 
 
   - name: Lunaris-8B
     model_id: sao10k/l3-lunaris-8b
@@ -69,7 +69,7 @@ dataset:
   shuffle: true
   shuffle_seed: 42
 
-  max_prompts: 24
+  max_prompts: 5
 
   filter_tags: []
 
