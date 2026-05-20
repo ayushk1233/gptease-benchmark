@@ -66,9 +66,16 @@ models:
 dataset:
   path: ./data/prompts/eval_dataset_v1.jsonl
 
-  max_prompts: 25
+  filter_tags:
+    - memory
 
-  shuffle: false
+  filter_difficulty:
+    - hard
+
+  max_prompts: 10
+
+  shuffle: true
+  shuffle_seed: 42
 
 output_dir: ./reports
 
