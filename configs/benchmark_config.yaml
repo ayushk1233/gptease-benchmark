@@ -64,7 +64,7 @@ models:
     enabled: true
 
 dataset:
-  path: ./data/prompts/eval_dataset_v1.jsonl
+  path: ./data/eval_dataset_v1.jsonl
 
   filter_tags:
     - memory
