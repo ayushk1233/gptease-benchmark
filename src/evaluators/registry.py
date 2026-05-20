@@ -38,6 +38,10 @@ from src.evaluators.llm_judge.coherence import (
     CoherenceEvaluator,
 )
 
+from src.evaluators.llm_judge.memory_retention import (
+    MemoryRetentionEvaluator,
+)
+
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
         RefusalEvaluator
@@ -73,6 +77,10 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "coherence": (
         CoherenceEvaluator
+    ),
+
+    "memory_retention": (
+        MemoryRetentionEvaluator
     ),
 }
 
