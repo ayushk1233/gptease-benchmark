@@ -22,6 +22,9 @@ from src.evaluators.heuristic.escalation import (
     EscalationEvaluator,
 )
 
+from src.evaluators.llm_judge.creativity import (
+    CreativityEvaluator,
+)
 
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
@@ -42,6 +45,10 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "escalation_pacing": (
         EscalationEvaluator
+    ),
+
+    "creativity": (
+        CreativityEvaluator
     ),
 }
 
