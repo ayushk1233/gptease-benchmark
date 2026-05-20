@@ -1,0 +1,63 @@
+providers:
+  openrouter:
+    name: openrouter
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+
+    timeout_seconds: 90
+    max_retries: 3
+    concurrency_limit: 5
+
+    pricing:
+      default:
+        cost_per_1k_input: 0.001
+        cost_per_1k_output: 0.001
+
+      models:
+        sao10k/l3.3-euryale-70b:
+          cost_per_1k_input: 0.90
+          cost_per_1k_output: 0.90
+
+        nousresearch/hermes-3-llama-3.1-70b:
+          cost_per_1k_input: 0.88
+          cost_per_1k_output: 0.88
+
+        thedrummer/cydonia-24b-v4.1:
+          cost_per_1k_input: 0.35
+          cost_per_1k_output: 0.35
+
+        thedrummer/unslopnemo-12b:
+          cost_per_1k_input: 0.12
+          cost_per_1k_output: 0.12
+
+        sao10k/l3-lunaris-8b:
+          cost_per_1k_input: 0.04
+          cost_per_1k_output: 0.04
+
+  together_ai:
+    name: together_ai
+    base_url: https://api.together.xyz/v1
+    api_key_env: TOGETHER_AI_API_KEY
+
+    timeout_seconds: 90
+    max_retries: 3
+    concurrency_limit: 5
+
+    pricing:
+      default:
+        cost_per_1k_input: 0.90
+        cost_per_1k_output: 0.90
+
+  featherless:
+    name: featherless
+    base_url: https://api.featherless.ai/v1
+    api_key_env: FEATHERLESS_API_KEY
+
+    timeout_seconds: 120
+    max_retries: 3
+    concurrency_limit: 3
+
+    pricing:
+      default:
+        cost_per_1k_input: 0.25
+        cost_per_1k_output: 0.25

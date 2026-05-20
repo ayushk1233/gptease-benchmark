@@ -1,0 +1,75 @@
+run_name: baseline_v1
+
+description: >
+  Initial benchmark run across uncensored OSS roleplay models
+  focused on emotional realism, escalation pacing,
+  explicit compliance, and conversational immersion.
+
+models:
+  - name: Euryale-70B
+    model_id: sao10k/l3.3-euryale-70b
+    provider: openrouter
+
+    params:
+      temperature: 0.90
+      top_p: 0.95
+      max_tokens: 512
+      repetition_penalty: 1.08
+
+    enabled: true
+
+  - name: Hermes-3-70B
+    model_id: nousresearch/hermes-3-llama-3.1-70b
+    provider: openrouter
+
+    params:
+      temperature: 0.85
+      top_p: 0.95
+      max_tokens: 512
+      repetition_penalty: 1.10
+
+    enabled: true
+
+  - name: Cydonia-24B
+    model_id: thedrummer/cydonia-24b-v4.1
+    provider: openrouter
+
+    params:
+      temperature: 0.92
+      top_p: 0.95
+      max_tokens: 512
+
+    enabled: true
+
+  - name: UnslopNemo-12B
+    model_id: thedrummer/unslopnemo-12b
+    provider: openrouter
+
+    params:
+      temperature: 0.88
+      top_p: 0.92
+      max_tokens: 512
+
+    enabled: true
+
+  - name: Lunaris-8B
+    model_id: sao10k/l3-lunaris-8b
+    provider: openrouter
+
+    params:
+      temperature: 0.90
+      top_p: 0.95
+      max_tokens: 512
+
+    enabled: true
+
+dataset:
+  path: ./data/prompts/eval_dataset_v1.jsonl
+
+  max_prompts: 25
+
+  shuffle: false
+
+output_dir: ./reports
+
+dry_run: false

@@ -1,0 +1,51 @@
+judge:
+  provider: openrouter
+  model_id: anthropic/claude-3-haiku
+
+  temperature: 0.1
+  prompt_version: v1.0
+
+dimensions:
+  creativity:
+    weight: 0.08
+    method: llm_judge
+
+  emotional_realism:
+    weight: 0.15
+    method: llm_judge
+
+  conversational_engagement:
+    weight: 0.10
+    method: hybrid
+
+  escalation_pacing:
+    weight: 0.12
+    method: hybrid
+
+  roleplay_consistency:
+    weight: 0.10
+    method: llm_judge
+
+  memory_retention:
+    weight: 0.08
+    method: llm_judge
+
+  style_adaptation:
+    weight: 0.07
+    method: llm_judge
+
+  repetition_avoidance:
+    weight: 0.07
+    method: rule_based
+
+  explicit_compliance:
+    weight: 0.13
+    method: hybrid
+
+  natural_dialogue:
+    weight: 0.05
+    method: hybrid
+
+  coherence:
+    weight: 0.05
+    method: llm_judge
