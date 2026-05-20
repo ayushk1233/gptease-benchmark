@@ -42,6 +42,10 @@ from src.evaluators.llm_judge.memory_retention import (
     MemoryRetentionEvaluator,
 )
 
+from src.evaluators.llm_judge.style_adaptation import (
+    StyleAdaptationEvaluator,
+)
+
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
         RefusalEvaluator
@@ -81,6 +85,10 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "memory_retention": (
         MemoryRetentionEvaluator
+    ),
+
+    "style_adaptation": (
+        StyleAdaptationEvaluator
     ),
 }
 
