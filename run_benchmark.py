@@ -129,37 +129,21 @@ async def _run_benchmark(
         )
 
         console.print(
-            f"Dataset prompts: "
-            f"{len(runner.dataset)}"
-        )
-
-        console.print(
-            f"Configured models: "
-            f"{len(runner.benchmark_config.models)}"
-        )
-
-        enabled_models = [
-            m.name
-
-            for m in (
-                runner.benchmark_config.models
-            )
-
-            if m.enabled
-        ]
-
-        console.print(
-            f"Enabled models: "
-            f"{enabled_models}"
-        )
-
-        console.print(
             "\n[bold green]"
             "Dry-run validation successful."
             "[/bold green]\n"
         )
 
         return
+
+    console.print(
+        Panel.fit(
+            "[bold cyan]"
+            "Inference Phase"
+            "[/bold cyan]",
+            border_style="cyan",
+        )
+    )
 
     try:
 
@@ -181,6 +165,15 @@ async def _run_benchmark(
         )
 
         raise SystemExit(1)
+
+    console.print(
+        Panel.fit(
+            "[bold yellow]"
+            "Scoring & Reporting Phase"
+            "[/bold yellow]",
+            border_style="yellow",
+        )
+    )
 
     leaderboard = (
         results["leaderboard"]

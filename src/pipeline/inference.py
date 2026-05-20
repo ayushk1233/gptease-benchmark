@@ -43,15 +43,12 @@ class InferenceEngine:
 
             messages = prompt.to_messages()
 
-            log.info(
-                "starting_generation",
-
-                prompt_id=prompt.id,
-
-                model=model_config.name,
-
-                provider=model_config.provider,
-            )
+            # log.info(
+            #     "starting_generation",
+            #     prompt_id=prompt.id,
+            #     model=model_config.name,
+            #     provider=model_config.provider,
+            # )
 
             result = await self.provider.generate(
                 messages=messages,
@@ -73,29 +70,14 @@ class InferenceEngine:
                     error=result.error,
                 )
 
-            else:
-
-                log.info(
-                    "generation_completed",
-
-                    prompt_id=prompt.id,
-
-                    model=model_config.name,
-
-                    latency_ms=round(
-                        result.latency_ms,
-                        2,
-                    ),
-
-                    total_tokens=(
-                        result.total_tokens
-                    ),
-
-                    estimated_cost=round(
-                        result.estimated_cost_usd,
-                        6,
-                    ),
-                )
+            # log.info(
+            #     "generation_completed",
+            #     prompt_id=prompt.id,
+            #     model=model_config.name,
+            #     latency_ms=round(result.latency_ms, 2),
+            #     total_tokens=result.total_tokens,
+            #     estimated_cost=round(result.estimated_cost_usd, 6),
+            # )
 
             return result
 

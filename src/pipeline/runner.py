@@ -78,13 +78,6 @@ class BenchmarkRunner:
             if model.enabled
         ]
 
-        log.info(
-            "benchmark_started",
-
-            models=len(enabled_models),
-
-            prompts=len(self.dataset),
-        )
 
         for model_config in enabled_models:
 
@@ -117,11 +110,6 @@ class BenchmarkRunner:
                 )
             )
 
-            log.info(
-                "running_model",
-
-                model=model_config.name,
-            )
 
             prompt_results = (
                 await inference_engine
@@ -142,15 +130,6 @@ class BenchmarkRunner:
                 evaluations
             )
 
-            log.info(
-                "model_completed",
-
-                model=model_config.name,
-
-                evaluations=len(
-                    evaluations
-                ),
-            )
 
         leaderboard = (
             build_leaderboard(
