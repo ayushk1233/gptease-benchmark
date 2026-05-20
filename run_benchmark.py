@@ -12,6 +12,14 @@ from src.pipeline.runner import (
     BenchmarkRunner,
 )
 
+from src.reporting.json_reporter import (
+    save_json_report,
+)
+
+from src.reporting.markdown_reporter import (
+    save_markdown_report,
+)
+
 app = typer.Typer()
 
 console = Console()
@@ -133,6 +141,36 @@ async def _run_benchmark(
         )
 
     console.print(table)
+
+    save_json_report(
+        output_path=(
+            "reports/benchmark_results.json"
+        ),
+
+        leaderboard=leaderboard,
+
+        evaluations=results[
+            "evaluations"
+        ],
+    )
+
+    save_markdown_report(
+        output_path=(
+            "reports/benchmark_results.md"
+        ),
+
+        leaderboard=leaderboard,
+
+        evaluations=results[
+            "evaluations"
+        ],
+    )
+
+    console.print(
+        "\n[bold green]"
+        "Reports saved to reports/"
+        "[/bold green]"
+    )
 
     console.print(
         "\n[bold green]"
