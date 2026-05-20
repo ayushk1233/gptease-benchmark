@@ -16,7 +16,7 @@ models:
       max_tokens: 512
       repetition_penalty: 1.08
 
-    enabled: true
+    enabled: false
 
   - name: Hermes-3-70B
     model_id: nousresearch/hermes-3-llama-3.1-70b
@@ -28,7 +28,7 @@ models:
       max_tokens: 512
       repetition_penalty: 1.10
 
-    enabled: true
+    enabled: false
 
   - name: Cydonia-24B
     model_id: thedrummer/cydonia-24b-v4.1
@@ -39,7 +39,7 @@ models:
       top_p: 0.95
       max_tokens: 512
 
-    enabled: true
+    enabled: false
 
   - name: UnslopNemo-12B
     model_id: thedrummer/unslopnemo-12b
@@ -50,7 +50,7 @@ models:
       top_p: 0.92
       max_tokens: 512
 
-    enabled: true
+    enabled: false
 
   - name: Lunaris-8B
     model_id: sao10k/l3-lunaris-8b
