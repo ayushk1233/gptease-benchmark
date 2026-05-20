@@ -46,6 +46,10 @@ from src.evaluators.llm_judge.style_adaptation import (
     StyleAdaptationEvaluator,
 )
 
+from src.evaluators.llm_judge.base_judge import (
+    BaseLLMJudge,
+)
+
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
         RefusalEvaluator
@@ -95,14 +99,45 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
 def get_evaluator(
     dimension: str,
-) -> BaseEvaluator:
+    provider=None,
+    judge_config=None,
+):
 
-    cls = _REGISTRY.get(dimension)
+    cls = _REGISTRY.get(
+        dimension
+    )
 
-    if not cls:
+    if cls is None:
+
         raise ValueError(
-            f"Unknown evaluator: {dimension!r}. "
-            f"Available: {list(_REGISTRY)!r}"
+            f"Unknown evaluator: "
+            f"{dimension!r}. "
+            f"Available: "
+            f"{list(_REGISTRY)!r}"
+        )
+
+    if issubclass(
+        cls,
+        BaseLLMJudge,
+    ):
+
+        if provider is None:
+
+            raise ValueError(
+                "LLM judge evaluator "
+                "requires provider"
+            )
+
+        if judge_config is None:
+
+            raise ValueError(
+                "LLM judge evaluator "
+                "requires judge_config"
+            )
+
+        return cls(
+            provider=provider,
+            judge_config=judge_config,
         )
 
     return cls()

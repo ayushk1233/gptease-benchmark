@@ -112,7 +112,8 @@ class BenchmarkRunner:
 
             evaluation_engine = (
                 EvaluationEngine(
-                    self.scoring_config
+                    scoring_config=self.scoring_config,
+                    provider=provider,
                 )
             )
 

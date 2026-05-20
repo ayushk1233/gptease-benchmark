@@ -7,6 +7,8 @@ import structlog
 
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
+from rich.text import Text
 
 from src.pipeline.runner import (
     BenchmarkRunner,
@@ -69,9 +71,12 @@ async def _run_benchmark(
 ):
 
     console.print(
-        "\n[bold cyan]"
-        "Starting GPTease Benchmark"
-        "[/bold cyan]\n"
+        Panel.fit(
+            "[bold magenta]"
+            "GPTease Benchmark Runtime"
+            "[/bold magenta]",
+            border_style="magenta",
+        )
     )
 
     runner = BenchmarkRunner(
@@ -87,6 +92,33 @@ async def _run_benchmark(
             scoring_config
         ),
     )
+
+    enabled_models = [
+
+        model.name
+
+        for model in (
+            runner.benchmark_config.models
+        )
+
+        if model.enabled
+    ]
+
+    console.print(
+        "\n[bold cyan]Benchmark Configuration[/bold cyan]"
+    )
+
+    console.print(
+        f"Dataset prompts: "
+        f"{len(runner.dataset)}"
+    )
+
+    console.print(
+        f"Enabled models: "
+        f"{enabled_models}"
+    )
+
+    console.print("")
 
     if dry_run:
 
@@ -129,7 +161,26 @@ async def _run_benchmark(
 
         return
 
-    results = await runner.run()
+    try:
+
+        results = await runner.run()
+
+    except Exception as e:
+
+        console.print(
+            Panel.fit(
+                (
+                    "[bold red]"
+                    "Benchmark Failed"
+                    "[/bold red]\n\n"
+                    f"{type(e).__name__}: "
+                    f"{e}"
+                ),
+                border_style="red",
+            )
+        )
+
+        raise SystemExit(1)
 
     leaderboard = (
         results["leaderboard"]
@@ -224,9 +275,12 @@ async def _run_benchmark(
     )
 
     console.print(
-        "\n[bold green]"
-        "Benchmark completed successfully."
-        "[/bold green]\n"
+        Panel.fit(
+            "[bold green]"
+            "Benchmark Completed Successfully"
+            "[/bold green]",
+            border_style="green",
+        )
     )
 
 

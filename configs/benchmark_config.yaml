@@ -69,7 +69,7 @@ dataset:
   shuffle: true
   shuffle_seed: 42
 
-  max_prompts: 10
+  max_prompts: 1
 
   filter_tags: []
 

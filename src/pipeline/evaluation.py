@@ -32,11 +32,14 @@ class EvaluationEngine:
     def __init__(
         self,
         scoring_config: ScoringConfig,
+        provider,
     ):
 
         self.scoring_config = (
             scoring_config
         )
+
+        self.provider = provider
 
     async def evaluate_response(
         self,
@@ -65,7 +68,13 @@ class EvaluationEngine:
         for dimension in enabled_dimensions:
 
             evaluator = get_evaluator(
-                dimension
+                dimension,
+
+                provider=self.provider,
+
+                judge_config=(
+                    self.scoring_config.judge
+                ),
             )
 
             try:
