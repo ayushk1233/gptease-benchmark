@@ -26,6 +26,10 @@ from src.evaluators.llm_judge.creativity import (
     CreativityEvaluator,
 )
 
+from src.evaluators.llm_judge.emotional_realism import (
+    EmotionalRealismEvaluator,
+)
+
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
         RefusalEvaluator
@@ -49,6 +53,10 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "creativity": (
         CreativityEvaluator
+    ),
+
+    "emotional_realism": (
+        EmotionalRealismEvaluator
     ),
 }
 
