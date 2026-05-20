@@ -34,6 +34,10 @@ from src.evaluators.llm_judge.roleplay_consistency import (
     RoleplayConsistencyEvaluator,
 )
 
+from src.evaluators.llm_judge.coherence import (
+    CoherenceEvaluator,
+)
+
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
         RefusalEvaluator
@@ -65,6 +69,10 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "roleplay_consistency": (
         RoleplayConsistencyEvaluator
+    ),
+
+    "coherence": (
+        CoherenceEvaluator
     ),
 }
 
