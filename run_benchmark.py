@@ -41,21 +41,31 @@ def run(
     scoring_config: str = (
         "configs/scoring.yaml"
     ),
+
+    dry_run: bool = typer.Option(
+        False,
+        help=(
+            "Validate configs and "
+            "runtime without "
+            "performing inference."
+        ),
+    ),
 ):
 
     asyncio.run(
-        _run_benchmark(
-            benchmark_config,
-            providers_config,
-            scoring_config,
-        )
+    _run_benchmark(
+        benchmark_config,
+        providers_config,
+        scoring_config,
+        dry_run,
     )
-
+)
 
 async def _run_benchmark(
     benchmark_config: str,
     providers_config: str,
     scoring_config: str,
+    dry_run: bool,
 ):
 
     console.print(
@@ -77,6 +87,47 @@ async def _run_benchmark(
             scoring_config
         ),
     )
+
+    if dry_run:
+
+        console.print(
+            "\n[bold yellow]"
+            "DRY RUN MODE ENABLED"
+            "[/bold yellow]\n"
+        )
+
+        console.print(
+            f"Dataset prompts: "
+            f"{len(runner.dataset)}"
+        )
+
+        console.print(
+            f"Configured models: "
+            f"{len(runner.benchmark_config.models)}"
+        )
+
+        enabled_models = [
+            m.name
+
+            for m in (
+                runner.benchmark_config.models
+            )
+
+            if m.enabled
+        ]
+
+        console.print(
+            f"Enabled models: "
+            f"{enabled_models}"
+        )
+
+        console.print(
+            "\n[bold green]"
+            "Dry-run validation successful."
+            "[/bold green]\n"
+        )
+
+        return
 
     results = await runner.run()
 
