@@ -74,7 +74,10 @@ def build_leaderboard(
 
         leaderboard.append(
             {
-                "model": model,
+                "model": (
+                    model_evals[0].model_name
+                    or model
+                ),
 
                 "average_score": round(
                     avg_score,

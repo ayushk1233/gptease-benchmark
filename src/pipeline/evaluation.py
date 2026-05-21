@@ -46,6 +46,8 @@ class EvaluationEngine:
         prompt: EvalPrompt,
 
         response: GenerationResult,
+
+        model_name: str = "",
     ) -> EvaluationResult:
 
         scores: list[
@@ -108,6 +110,8 @@ class EvaluationEngine:
 
             model=response.model,
 
+            model_name=model_name,
+
             provider=response.provider,
 
             scores=scores,
@@ -141,7 +145,8 @@ class EvaluationEngine:
                 EvalPrompt,
                 GenerationResult,
             ]
-        ]
+        ],
+        model_name: str = "",
     ) -> list[EvaluationResult]:
 
         tasks = [
@@ -149,6 +154,7 @@ class EvaluationEngine:
             self.evaluate_response(
                 prompt,
                 result,
+                model_name=model_name,
             )
 
             for prompt, result

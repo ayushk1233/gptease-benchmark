@@ -32,6 +32,8 @@ class EvaluationResult:
 
     model: str
 
+    model_name: str
+
     provider: str
 
     scores: list[DimensionScore]

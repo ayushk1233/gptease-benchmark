@@ -122,7 +122,10 @@ class BenchmarkRunner:
             evaluations = (
                 await evaluation_engine
                 .batch_evaluate(
-                    prompt_results
+                    prompt_results,
+                    model_name=(
+                        model_config.name
+                    ),
                 )
             )
 

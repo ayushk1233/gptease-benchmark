@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import structlog
 
 from abc import ABC
+from tenacity import AsyncRetrying, wait_exponential, stop_after_attempt, RetryError
+
+JUDGE_SEMAPHORE = asyncio.Semaphore(2)
+
 from abc import abstractmethod
 
 from src.evaluators.base import (
@@ -124,31 +129,41 @@ class BaseLLMJudge(
             },
         ]
 
-        generation = (
-            await self.provider.generate(
-                messages=messages,
+        try:
+            async for attempt in AsyncRetrying(
+                wait=wait_exponential(multiplier=1, min=2, max=30),
+                stop=stop_after_attempt(5)
+            ):
+                with attempt:
+                    async with JUDGE_SEMAPHORE:
+                        generation = (
+                            await self.provider.generate(
+                                messages=messages,
 
-                model=(
-                    self.judge_config
-                    .model_id
-                ),
+                                model=(
+                                    self.judge_config
+                                    .model_id
+                                ),
 
-                params=GenerationParams(
-                    temperature=0.1,
-                    top_p=0.9,
-                    max_tokens=250,
-                ),
-            )
-        )
+                                params=GenerationParams(
+                                    temperature=0.1,
+                                    top_p=0.9,
+                                    max_tokens=250,
+                                ),
+                            )
+                        )
 
-        if generation.is_error:
+                    if generation.is_error:
+                        raise Exception(f"Generation failed: {generation.error}")
+
+        except RetryError as e:
 
             log.error(
                 "judge_generation_failed",
 
                 dimension=self.dimension_name,
 
-                error=generation.error,
+                error=str(e),
             )
 
             return DimensionScore(
@@ -159,15 +174,13 @@ class BaseLLMJudge(
                 score=1.0,
 
                 reasoning=(
-                    "Judge model failed."
+                    "Judge model failed after retries."
                 ),
 
                 confidence=0.0,
 
                 metadata={
-                    "error": (
-                        generation.error
-                    ),
+                    "error": str(e),
                 },
             )
 

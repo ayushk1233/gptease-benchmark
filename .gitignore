@@ -5,3 +5,4 @@ __pycache__/
 .DS_Store
 mlruns/
 data/*.db
+api.py
