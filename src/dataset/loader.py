@@ -28,28 +28,30 @@ def load_dataset(
     prompts: list[EvalPrompt] = []
 
     with open(path, "r") as f:
+        content = f.read().strip()
 
-        for line_number, line in enumerate(f, start=1):
-
+    try:
+        raw_data = json.loads(content)
+        if isinstance(raw_data, list):
+            for i, item in enumerate(raw_data):
+                try:
+                    prompt = EvalPrompt.model_validate(item)
+                    prompts.append(prompt)
+                except Exception as e:
+                    raise ValueError(f"Invalid dataset item at index {i}: {e}")
+        else:
+            raise ValueError("Parsed JSON is not a list")
+    except json.JSONDecodeError:
+        for line_number, line in enumerate(content.splitlines(), start=1):
             line = line.strip()
-
             if not line:
                 continue
-
             try:
                 raw = json.loads(line)
-
-                prompt = EvalPrompt.model_validate(
-                    raw
-                )
-
+                prompt = EvalPrompt.model_validate(raw)
                 prompts.append(prompt)
-
             except Exception as e:
-                raise ValueError(
-                    f"Invalid dataset line "
-                    f"{line_number}: {e}"
-                )
+                raise ValueError(f"Invalid dataset line {line_number}: {e}")
 
     prompts = _apply_filters(
         prompts,

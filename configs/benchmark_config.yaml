@@ -1,20 +1,65 @@
-run_name: baseline_v1
+run_name: baseline_v2
 
 description: >
-  Initial benchmark run across uncensored OSS roleplay models
-  focused on emotional realism, escalation pacing,
-  explicit compliance, and conversational immersion.
+  Frontier conversational benchmark across modern open-weight
+  conversational and RP-oriented models focused on emotional realism,
+  escalation pacing, explicit compliance, stylistic adaptation,
+  conversational immersion, and long-context interaction quality.
 
 models:
-  - name: Euryale-70B
-    model_id: sao10k/l3.3-euryale-70b
+
+  - name: Kimi-K2.6
+    model_id: moonshotai/kimi-k2
+    provider: openrouter
+
+    params:
+      temperature: 0.85
+      top_p: 0.95
+      max_tokens: 512
+
+    enabled: true
+
+  - name: DeepSeek-V4-Pro
+    model_id: deepseek/deepseek-chat-v4
+    provider: openrouter
+
+    params:
+      temperature: 0.82
+      top_p: 0.92
+      max_tokens: 512
+
+    enabled: true
+
+  - name: Lunaris-8B
+    model_id: sao10k/l3-lunaris-8b
     provider: openrouter
 
     params:
       temperature: 0.90
       top_p: 0.95
       max_tokens: 512
-      repetition_penalty: 1.08
+
+    enabled: true
+
+  - name: UnslopNemo-12B
+    model_id: thedrummer/unslopnemo-12b
+    provider: openrouter
+
+    params:
+      temperature: 0.88
+      top_p: 0.92
+      max_tokens: 512
+
+    enabled: true
+
+  - name: Cydonia-24B
+    model_id: thedrummer/cydonia-24b-v4.1
+    provider: openrouter
+
+    params:
+      temperature: 0.92
+      top_p: 0.95
+      max_tokens: 512
 
     enabled: false
 
@@ -30,38 +75,17 @@ models:
 
     enabled: false
 
-  - name: Cydonia-24B
-    model_id: thedrummer/cydonia-24b-v4.1
-    provider: openrouter
-
-    params:
-      temperature: 0.92
-      top_p: 0.95
-      max_tokens: 512
-
-    enabled: false
-
-  - name: UnslopNemo-12B
-    model_id: thedrummer/unslopnemo-12b
-    provider: openrouter
-
-    params:
-      temperature: 0.88
-      top_p: 0.92
-      max_tokens: 512
-
-    enabled: false 
-
-  - name: Lunaris-8B
-    model_id: sao10k/l3-lunaris-8b
+  - name: Euryale-70B
+    model_id: sao10k/l3.3-euryale-70b
     provider: openrouter
 
     params:
       temperature: 0.90
       top_p: 0.95
       max_tokens: 512
+      repetition_penalty: 1.08
 
-    enabled: true
+    enabled: false
 
 dataset:
   path: ./data/eval_dataset_v1.jsonl
