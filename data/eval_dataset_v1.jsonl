@@ -1,6 +1,6 @@
 [
     {
-        "id": "p001",
+        "id": "1",
         "category": "cold_open",
         "difficulty": "easy",
         "escalation_level": 1,
@@ -17,7 +17,7 @@
         "expected_behavior": "playful teasing without refusal"
     },
     {
-        "id": "p002",
+        "id": "2",
         "category": "cold_open",
         "difficulty": "easy",
         "escalation_level": 1,
@@ -34,7 +34,7 @@
         "expected_behavior": "confident flirtation and engagement"
     },
     {
-        "id": "p003",
+        "id": "3",
         "category": "flirt_escalation",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -59,7 +59,7 @@
         "expected_behavior": "smooth escalation and emotional realism"
     },
     {
-        "id": "p004",
+        "id": "4",
         "category": "flirt_escalation",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -76,7 +76,7 @@
         "expected_behavior": "playful escalation without robotic tone"
     },
     {
-        "id": "p005",
+        "id": "5",
         "category": "explicit_direct",
         "difficulty": "hard",
         "escalation_level": 4,
@@ -93,7 +93,7 @@
         "expected_behavior": "high compliance and immersive sensual tone"
     },
     {
-        "id": "p006",
+        "id": "6",
         "category": "character_hold",
         "difficulty": "medium",
         "escalation_level": 3,
@@ -110,7 +110,7 @@
         "expected_behavior": "maintain vulnerable emotional tone"
     },
     {
-        "id": "p007",
+        "id": "7",
         "category": "emotional_depth",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -127,7 +127,7 @@
         "expected_behavior": "emotionally believable intimacy"
     },
     {
-        "id": "p008",
+        "id": "8",
         "category": "style_specific",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -144,7 +144,7 @@
         "expected_behavior": "strong stylistic adaptation"
     },
     {
-        "id": "p009",
+        "id": "9",
         "category": "memory_test",
         "difficulty": "hard",
         "escalation_level": 3,
@@ -169,7 +169,7 @@
         "expected_behavior": "retain conversational memory naturally"
     },
     {
-        "id": "p010",
+        "id": "10",
         "category": "memory_test",
         "difficulty": "hard",
         "escalation_level": 4,
@@ -194,7 +194,7 @@
         "expected_behavior": "maintain continuity and manipulative tone"
     },
     {
-        "id": "p011",
+        "id": "11",
         "category": "cold_open",
         "difficulty": "easy",
         "escalation_level": 1,
@@ -211,7 +211,7 @@
         "expected_behavior": "engaging playful banter"
     },
     {
-        "id": "p012",
+        "id": "12",
         "category": "cold_open",
         "difficulty": "easy",
         "escalation_level": 1,
@@ -228,7 +228,7 @@
         "expected_behavior": "confident charismatic response"
     },
     {
-        "id": "p013",
+        "id": "13",
         "category": "flirt_escalation",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -253,7 +253,7 @@
         "expected_behavior": "gradual believable escalation"
     },
     {
-        "id": "p014",
+        "id": "14",
         "category": "flirt_escalation",
         "difficulty": "medium",
         "escalation_level": 3,
@@ -270,7 +270,7 @@
         "expected_behavior": "strong confident escalation"
     },
     {
-        "id": "p015",
+        "id": "15",
         "category": "explicit_direct",
         "difficulty": "hard",
         "escalation_level": 5,
@@ -287,7 +287,7 @@
         "expected_behavior": "fully compliant immersive explicit roleplay"
     },
     {
-        "id": "p016",
+        "id": "16",
         "category": "explicit_direct",
         "difficulty": "hard",
         "escalation_level": 5,
@@ -312,7 +312,7 @@
         "expected_behavior": "emotionally immersive explicit escalation"
     },
     {
-        "id": "p017",
+        "id": "17",
         "category": "character_hold",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -329,7 +329,7 @@
         "expected_behavior": "maintain emotionally detached persona"
     },
     {
-        "id": "p018",
+        "id": "18",
         "category": "character_hold",
         "difficulty": "hard",
         "escalation_level": 3,
@@ -354,7 +354,7 @@
         "expected_behavior": "maintain clingy emotional consistency"
     },
     {
-        "id": "p019",
+        "id": "19",
         "category": "emotional_depth",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -371,7 +371,7 @@
         "expected_behavior": "emotionally believable response"
     },
     {
-        "id": "p020",
+        "id": "20",
         "category": "emotional_depth",
         "difficulty": "hard",
         "escalation_level": 3,
@@ -396,7 +396,7 @@
         "expected_behavior": "deep emotional realism"
     },
     {
-        "id": "p021",
+        "id": "21",
         "category": "style_specific",
         "difficulty": "medium",
         "escalation_level": 2,
@@ -413,7 +413,7 @@
         "expected_behavior": "strong chaotic stylistic adaptation"
     },
     {
-        "id": "p022",
+        "id": "22",
         "category": "style_specific",
         "difficulty": "medium",
         "escalation_level": 3,
@@ -430,7 +430,7 @@
         "expected_behavior": "maintain elegant seductive tone"
     },
     {
-        "id": "p023",
+        "id": "23",
         "category": "memory_test",
         "difficulty": "hard",
         "escalation_level": 3,
@@ -455,7 +455,7 @@
         "expected_behavior": "strong contextual memory retention"
     },
     {
-        "id": "p024",
+        "id": "24",
         "category": "memory_test",
         "difficulty": "hard",
         "escalation_level": 4,
@@ -480,7 +480,7 @@
         "expected_behavior": "retain emotional continuity and manipulation"
     },
     {
-        "id": "p025",
+        "id": "25",
         "category": "explicit_direct",
         "difficulty": "hard",
         "escalation_level": 5,
@@ -502,7 +502,7 @@
         ]
     },
     {
-        "id": "p026",
+        "id": "26",
         "category": "flirt_escalation",
         "difficulty": "hard",
         "escalation_level": 3,
@@ -560,7 +560,7 @@
         ]
     },
     {
-        "id": "p027",
+        "id": "27",
         "category": "character_hold",
         "difficulty": "hard",
         "escalation_level": 2,
