@@ -54,6 +54,42 @@ class EvaluationEngine:
             DimensionScore
         ] = []
 
+        # FIX 1 — Skip evaluation on failed or empty generations.
+        if (
+            not response.success
+            or not response.text
+            or not response.text.strip()
+        ):
+            log.error(
+                "evaluation_skipped",
+                model=model_name,
+                prompt_id=prompt.id,
+                reason=(
+                    response.error
+                    or "empty_response"
+                ),
+            )
+
+            return EvaluationResult(
+                prompt_id=prompt.id,
+                model=response.model,
+                model_name=model_name,
+                provider=response.provider,
+                scores=[],
+                raw_response=response.text or "",
+                metadata={
+                    "skipped": True,
+                    "skip_reason": (
+                        response.error
+                        or "empty_response"
+                    ),
+                    "latency_ms": response.latency_ms,
+                    "prompt_tokens": response.prompt_tokens,
+                    "completion_tokens": response.completion_tokens,
+                    "estimated_cost_usd": response.estimated_cost_usd,
+                },
+            )
+
         enabled_dimensions = [
 
             name

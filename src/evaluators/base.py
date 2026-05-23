@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Union
 
 from src.dataset.models import (
     EvalPrompt,
@@ -14,7 +14,8 @@ class DimensionScore:
 
     dimension: str
 
-    score: float
+    # None indicates a failed judge evaluation — must be excluded from aggregation.
+    score: Optional[float]
 
     reasoning: str
 
@@ -53,18 +54,18 @@ class EvaluationResult:
         ]
 
     @property
-    def average_score(self) -> float:
+    def average_score(self) -> Optional[float]:
 
-        if not self.scores:
-            return 0.0
+        valid = [
+            s.score
+            for s in self.scores
+            if s.score is not None
+        ]
 
-        return (
-            sum(
-                s.score
-                for s in self.scores
-            )
-            / len(self.scores)
-        )
+        if not valid:
+            return None
+
+        return sum(valid) / len(valid)
 
     def get_score(
         self,

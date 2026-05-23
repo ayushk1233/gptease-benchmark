@@ -172,5 +172,6 @@ class FeatherlessProvider(BaseProvider):
 
                 estimated_cost_usd=0.0,
 
+                success=False,
                 error=str(e),
             )

@@ -141,12 +141,22 @@ class BenchmarkRunner:
             )
         )
 
+        skipped = sum(1 for e in all_evaluations if e.metadata.get("skipped"))
+        successful = len(all_evaluations) - skipped
+        judge_fails = sum(
+            1 for e in all_evaluations
+            if not e.metadata.get("skipped")
+            for s in e.scores if s.score is None
+        )
+
         log.info(
             "benchmark_completed",
 
-            total_evaluations=len(
-                all_evaluations
-            ),
+            total_evaluations=len(all_evaluations),
+            successful_generations=successful,
+            failed_generations=skipped,
+            skipped_evaluations=skipped,
+            judge_failures=judge_fails,
         )
 
         return {

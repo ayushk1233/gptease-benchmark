@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from typing import Optional
 
 from src.evaluators.base import (
     EvaluationResult,
@@ -34,21 +35,32 @@ def build_leaderboard(
         grouped.items()
     ):
 
-        scores = [
-
-            aggregate_scores(
-                evaluation,
-                scoring_config,
-            )
-
-            for evaluation
-            in model_evals
+        # FIX 1 — Only aggregate evaluations that have valid scores.
+        # Skipped evaluations (empty scores list) are excluded.
+        valid_evals = [
+            e for e in model_evals
+            if e.scores and not e.metadata.get("skipped")
         ]
 
-        avg_score = (
-            sum(scores)
-            / len(scores)
-        )
+        per_prompt_scores: list[float] = [
+            s
+            for e in valid_evals
+            for s in [aggregate_scores(e, scoring_config)]
+            if s is not None
+        ]
+
+        if per_prompt_scores:
+            avg_score: Optional[float] = round(
+                sum(per_prompt_scores) / len(per_prompt_scores),
+                2,
+            )
+            status = "ok"
+        else:
+            # All prompts failed — model shows FAILED, not a bogus number.
+            avg_score = None
+            status = "FAILED"
+            import structlog
+            structlog.get_logger().warning("model_excluded_from_leaderboard", model=model)
 
         avg_latency = (
             sum(
@@ -72,39 +84,39 @@ def build_leaderboard(
             / len(model_evals)
         )
 
-        leaderboard.append(
-            {
-                "model": (
-                    model_evals[0].model_name
-                    or model
-                ),
+        entry = {
+            "model": (
+                model_evals[0].model_name
+                or model
+            ),
 
-                "average_score": round(
-                    avg_score,
-                    2,
-                ),
+            "average_score": avg_score,
 
-                "average_latency_ms": round(
-                    avg_latency,
-                    2,
-                ),
+            "status": status,
 
-                "average_cost_usd": round(
-                    avg_cost,
-                    6,
-                ),
+            "average_latency_ms": round(
+                avg_latency,
+                2,
+            ),
 
-                "evaluations": len(
-                    model_evals
-                ),
-            }
-        )
+            "average_cost_usd": round(
+                avg_cost,
+                6,
+            ),
 
+            "evaluations": len(model_evals),
+
+            "valid_evaluations": len(per_prompt_scores),
+        }
+
+        leaderboard.append(entry)
+
+    # Sort: valid scores descending, FAILED entries at the bottom.
     leaderboard.sort(
         key=lambda x: (
-            x["average_score"]
+            x["average_score"] is None,
+            -(x["average_score"] or 0),
         ),
-        reverse=True,
     )
 
     return leaderboard

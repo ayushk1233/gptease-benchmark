@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Optional
+
 from src.evaluators.base import (
     EvaluationResult,
 )
@@ -38,13 +40,17 @@ DIMENSION_WEIGHTS = {
 def aggregate_scores(
     evaluation: EvaluationResult,
     scoring_config: ScoringConfig,
-) -> float:
+) -> Optional[float]:
 
     weighted_sum = 0.0
 
     total_weight = 0.0
 
     for score in evaluation.scores:
+
+        # FIX 2 — Skip None scores (failed/unparseable judge calls).
+        if score.score is None:
+            continue
 
         dimension_config = (
             scoring_config
@@ -73,7 +79,8 @@ def aggregate_scores(
         total_weight += weight
 
     if total_weight == 0:
-        return 0.0
+        # All scores were None or no dimensions matched — no valid data.
+        return None
 
     final_score = round(
         (weighted_sum / total_weight) * 20,

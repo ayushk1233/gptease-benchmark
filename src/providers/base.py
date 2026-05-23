@@ -26,6 +26,8 @@ class GenerationResult:
 
     estimated_cost_usd: float
 
+    success: bool = True
+
     error: Optional[str] = None
 
     retries: int = 0
