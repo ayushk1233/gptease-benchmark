@@ -10,29 +10,37 @@ providers:
 
     pricing:
       default:
-        cost_per_1k_input: 0.001
-        cost_per_1k_output: 0.001
+        cost_per_1k_input: 0.000001   # $0.001/M — fallback
+        cost_per_1k_output: 0.000001
 
       models:
         sao10k/l3.3-euryale-70b:
-          cost_per_1k_input: 0.90
-          cost_per_1k_output: 0.90
+          cost_per_1k_input: 0.0009    # $0.90/M
+          cost_per_1k_output: 0.0009
 
         nousresearch/hermes-3-llama-3.1-70b:
-          cost_per_1k_input: 0.88
-          cost_per_1k_output: 0.88
+          cost_per_1k_input: 0.00088   # $0.88/M
+          cost_per_1k_output: 0.00088
 
         thedrummer/cydonia-24b-v4.1:
-          cost_per_1k_input: 0.35
-          cost_per_1k_output: 0.35
+          cost_per_1k_input: 0.00035   # $0.35/M
+          cost_per_1k_output: 0.00035
 
         thedrummer/unslopnemo-12b:
-          cost_per_1k_input: 0.12
-          cost_per_1k_output: 0.12
+          cost_per_1k_input: 0.00012   # $0.12/M
+          cost_per_1k_output: 0.00012
 
         sao10k/l3-lunaris-8b:
-          cost_per_1k_input: 0.04
-          cost_per_1k_output: 0.04
+          cost_per_1k_input: 0.00004   # $0.04/M
+          cost_per_1k_output: 0.00004
+
+        moonshotai/kimi-k2:
+          cost_per_1k_input: 0.00014   # $0.14/M
+          cost_per_1k_output: 0.00059  # $0.59/M
+
+        deepseek/deepseek-v4-pro:
+          cost_per_1k_input: 0.00027   # $0.27/M
+          cost_per_1k_output: 0.00110  # $1.10/M
 
   together_ai:
     name: together_ai
