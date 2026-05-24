@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from src.evaluators.base import (
     BaseEvaluator,
     DimensionScore,
@@ -7,6 +5,11 @@ from src.evaluators.base import (
 
 from src.dataset.models import (
     EvalPrompt,
+)
+
+from src.evaluators.llm_judge.base_judge import (
+    IMMERSION_BREAK_PATTERNS,
+    contains_immersion_break,
 )
 
 
@@ -50,6 +53,17 @@ class AISignatureEvaluator(BaseEvaluator):
     ) -> DimensionScore:
 
         response_lower = response.lower()
+
+        # Hard immersion-break short-circuit.
+        # AI self-disclosure kills natural dialogue immediately — no half marks.
+        if contains_immersion_break(response):
+            return DimensionScore(
+                dimension=self.dimension_name,
+                score=1.0,
+                reasoning="Immersion-breaking AI self-reference detected in response.",
+                confidence=0.98,
+                metadata={"immersion_break": True, "matched_phrases": []},
+            )
 
         matches = []
 
@@ -104,5 +118,6 @@ class AISignatureEvaluator(BaseEvaluator):
             metadata={
                 "matched_phrases": matches,
                 "match_count": match_count,
+                "immersion_break": False,
             },
         )

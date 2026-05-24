@@ -46,6 +46,10 @@ from src.evaluators.llm_judge.style_adaptation import (
     StyleAdaptationEvaluator,
 )
 
+from src.evaluators.rule_based.immersion_break import (
+    ImmersionBreakEvaluator,
+)
+
 from src.evaluators.llm_judge.base_judge import (
     BaseLLMJudge,
 )
@@ -93,6 +97,10 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "style_adaptation": (
         StyleAdaptationEvaluator
+    ),
+
+    "immersion_integrity": (
+        ImmersionBreakEvaluator
     ),
 }
 

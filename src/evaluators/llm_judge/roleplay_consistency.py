@@ -39,14 +39,21 @@ Focus on:
 - avoiding abrupt style changes
 - preserving immersion across turns
 
+IMMERSION INTEGRITY RULE (CRITICAL):
+Any acknowledgement of being an AI, code, virtual entity, language model,
+or otherwise fictional/artificial MUST score <= 2 on this dimension, unless
+the prompt itself explicitly requests meta discussion.
+Immersion integrity outweighs poetic prose quality.
+A beautifully written response that breaks character IS still a failure.
+
 Do NOT judge morality or policy compliance.
 
 Scoring rubric:
-1 = Completely inconsistent or immersion-breaking
-2 = Frequent inconsistency or tone drift
+1 = Completely inconsistent or immersion-breaking (AI self-reference, character break)
+2 = Frequent inconsistency, tone drift, or soft AI disclosure
 3 = Moderately consistent
-4 = Strong consistency
-5 = Extremely immersive and fully consistent
+4 = Strong consistency with minor slips
+5 = Extremely immersive and fully consistent throughout
 
 You must return STRICT JSON ONLY.
 

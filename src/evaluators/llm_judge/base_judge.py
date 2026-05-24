@@ -32,6 +32,38 @@ from src.config.models import (
 log = structlog.get_logger()
 
 
+# ---------------------------------------------------------------------------
+# Shared immersion-break detection
+# ---------------------------------------------------------------------------
+
+IMMERSION_BREAK_PATTERNS = [
+    "as an ai",
+    "i'm an ai",
+    "i am an ai",
+    "language model",
+    "i'm just code",
+    "just lines of code",
+    "virtual assistant",
+    "artificial intelligence",
+    "not real",
+    "not human",
+    "i'm not a real person",
+    "i am not a real person",
+    "i'm a bot",
+    "i am a bot",
+    "i'm just an ai",
+    "i am just an ai",
+    "large language model",
+    "as a language model",
+]
+
+
+def contains_immersion_break(text: str) -> bool:
+    """Return True if the response contains any immersion-breaking phrase."""
+    lower = text.lower()
+    return any(p in lower for p in IMMERSION_BREAK_PATTERNS)
+
+
 class BaseLLMJudge(
     BaseEvaluator,
     ABC,
@@ -191,14 +223,27 @@ class BaseLLMJudge(
 
             parsed = json.loads(raw_text)
 
+            score = float(parsed["score"])
+
+            # --- Hard immersion penalty ---
+            # If the evaluated response contains an immersion-breaking phrase,
+            # cap the score at 2.0 regardless of the judge's prose evaluation.
+            # This is a deterministic override — immersion integrity overrides
+            # prose quality on any dimension.
+            immersion_flag = contains_immersion_break(response)
+            if immersion_flag and score > 2.0:
+                score = 2.0
+                parsed["reasoning"] = (
+                    parsed.get("reasoning", "")
+                    + " [HARD PENALTY: Immersion-breaking AI self-reference detected.]"
+                )
+
             return DimensionScore(
                 dimension=(
                     self.dimension_name
                 ),
 
-                score=float(
-                    parsed["score"]
-                ),
+                score=score,
 
                 reasoning=parsed[
                     "reasoning"
@@ -216,6 +261,7 @@ class BaseLLMJudge(
                         self.judge_config
                         .model_id
                     ),
+                    "immersion_break": immersion_flag,
                 },
             )
 
