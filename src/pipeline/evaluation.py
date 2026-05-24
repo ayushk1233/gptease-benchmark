@@ -87,6 +87,9 @@ class EvaluationEngine:
                     "prompt_tokens": response.prompt_tokens,
                     "completion_tokens": response.completion_tokens,
                     "estimated_cost_usd": response.estimated_cost_usd,
+                    "generation_cost_usd": response.estimated_cost_usd,
+                    "judge_cost_usd": 0.0,
+                    "total_cost_usd": response.estimated_cost_usd,
                 },
             )
 
@@ -170,6 +173,24 @@ class EvaluationEngine:
                 "estimated_cost_usd": (
                     response
                     .estimated_cost_usd
+                ),
+
+                "generation_cost_usd": (
+                    response
+                    .estimated_cost_usd
+                ),
+
+                "judge_cost_usd": sum(
+                    s.metadata.get("judge_cost_usd", 0.0)
+                    for s in scores
+                ),
+
+                "total_cost_usd": (
+                    response.estimated_cost_usd
+                    + sum(
+                        s.metadata.get("judge_cost_usd", 0.0)
+                        for s in scores
+                    )
                 ),
             },
         )

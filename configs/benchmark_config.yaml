@@ -13,8 +13,8 @@ models:
     provider: openrouter
 
     params:
-      temperature: 0.85
-      top_p: 0.95
+      temperature: 0.70
+      top_p: 0.90
       max_tokens: 512
 
     enabled: true 
@@ -39,7 +39,7 @@ models:
       top_p: 0.95
       max_tokens: 512
 
-    enabled: false
+    enabled: true
 
   - name: UnslopNemo-12B
     model_id: thedrummer/unslopnemo-12b
@@ -93,7 +93,7 @@ dataset:
   shuffle: true
   shuffle_seed: 42
 
-  max_prompts: 1
+  max_prompts: 10
 
   filter_tags: []
 

@@ -57,6 +57,7 @@ class JudgeConfig(BaseConfigModel):
     model_id: str
     temperature: float = 0.1
     prompt_version: str = "v1.0"
+    save_raw_judge_outputs: bool = False
 
 
 class DimensionConfig(BaseConfigModel):

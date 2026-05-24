@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from src.evaluators.base import (
     BaseEvaluator,
     DimensionScore,
@@ -12,6 +10,7 @@ from src.dataset.models import (
 from src.evaluators.llm_judge.base_judge import (
     IMMERSION_BREAK_PATTERNS,
     contains_immersion_break,
+    normalize_text,
 )
 
 
@@ -39,7 +38,7 @@ class ImmersionBreakEvaluator(BaseEvaluator):
 
         matched = [
             p for p in IMMERSION_BREAK_PATTERNS
-            if p in response.lower()
+            if p in normalize_text(response).lower()
         ]
 
         if matched:

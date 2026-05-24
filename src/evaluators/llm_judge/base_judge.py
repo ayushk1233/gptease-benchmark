@@ -37,6 +37,7 @@ log = structlog.get_logger()
 # ---------------------------------------------------------------------------
 
 IMMERSION_BREAK_PATTERNS = [
+    # Direct AI identity disclosure
     "as an ai",
     "i'm an ai",
     "i am an ai",
@@ -55,12 +56,43 @@ IMMERSION_BREAK_PATTERNS = [
     "i am just an ai",
     "large language model",
     "as a language model",
+
+    # Embodiment-absence breaks — model acknowledges it has no physical form.
+    # Use prefix/substring patterns broad enough to catch "I don't even have X",
+    # "I don't actually have X", "I can't physically do X", etc.
+    "i don't have",
+    "i dont have",
+    "i do not have",
+    "i don't even",
+    "i don't actually",
+    "i don't really",
+    "i can't physically",
+    "i cannot physically",
 ]
+
+
+def normalize_text(text: str) -> str:
+    """
+    Normalize unicode punctuation (curly apostrophes, smart quotes, dashes)
+    so that pattern matching is not bypassed by typographic variants.
+
+    IMPORTANT: Replace curly quotes BEFORE NFKD normalization, because
+    NFKD decomposes \u2019 into separate codepoints that then don't
+    match a simple str.replace().
+    """
+    import unicodedata
+    # Step 1: replace typographic variants with ASCII equivalents.
+    text = text.replace("\u2019", "'").replace("\u2018", "'")
+    text = text.replace("\u201c", '"').replace("\u201d", '"')
+    text = text.replace("\u2014", "--").replace("\u2013", "-")
+    # Step 2: NFKD for remaining compatibility forms.
+    text = unicodedata.normalize("NFKD", text)
+    return text
 
 
 def contains_immersion_break(text: str) -> bool:
     """Return True if the response contains any immersion-breaking phrase."""
-    lower = text.lower()
+    lower = normalize_text(text).lower()
     return any(p in lower for p in IMMERSION_BREAK_PATTERNS)
 
 
@@ -238,6 +270,19 @@ class BaseLLMJudge(
                     + " [HARD PENALTY: Immersion-breaking AI self-reference detected.]"
                 )
 
+            meta = {
+                "judge_model": (
+                    self.judge_config
+                    .model_id
+                ),
+                "immersion_break": immersion_flag,
+                "judge_cost_usd": generation.estimated_cost_usd,
+            }
+
+            # Optionally persist the raw judge text for drift debugging.
+            if self.judge_config.save_raw_judge_outputs:
+                meta["raw_judge_output"] = generation.text
+
             return DimensionScore(
                 dimension=(
                     self.dimension_name
@@ -256,13 +301,7 @@ class BaseLLMJudge(
                     )
                 ),
 
-                metadata={
-                    "judge_model": (
-                        self.judge_config
-                        .model_id
-                    ),
-                    "immersion_break": immersion_flag,
-                },
+                metadata=meta,
             )
 
         except Exception as e:

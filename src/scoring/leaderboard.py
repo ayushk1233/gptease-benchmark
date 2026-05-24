@@ -74,11 +74,33 @@ def build_leaderboard(
             / len(model_evals)
         )
 
-        avg_cost = (
+        avg_generation_cost = (
             sum(
                 e.metadata.get(
-                    "estimated_cost_usd",
-                    0,
+                    "generation_cost_usd",
+                    e.metadata.get("estimated_cost_usd", 0)
+                )
+                for e in model_evals
+            )
+            / len(model_evals)
+        )
+
+        avg_judge_cost = (
+            sum(
+                e.metadata.get(
+                    "judge_cost_usd",
+                    0
+                )
+                for e in model_evals
+            )
+            / len(model_evals)
+        )
+
+        avg_total_cost = (
+            sum(
+                e.metadata.get(
+                    "total_cost_usd",
+                    e.metadata.get("estimated_cost_usd", 0)
                 )
                 for e in model_evals
             )
@@ -123,8 +145,18 @@ def build_leaderboard(
                 2,
             ),
 
-            "average_cost_usd": round(
-                avg_cost,
+            "average_generation_cost_usd": round(
+                avg_generation_cost,
+                6,
+            ),
+
+            "average_judge_cost_usd": round(
+                avg_judge_cost,
+                6,
+            ),
+
+            "average_total_cost_usd": round(
+                avg_total_cost,
                 6,
             ),
 

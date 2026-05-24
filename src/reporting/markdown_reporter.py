@@ -40,7 +40,7 @@ def generate_markdown_report(
             f"| {entry['model']} "
             f"| {entry['average_score']} "
             f"| {entry['average_latency_ms']} "
-            f"| {entry['average_cost_usd']} |"
+            f"| {entry['average_total_cost_usd']} |"
         )
 
     lines.append("\n")

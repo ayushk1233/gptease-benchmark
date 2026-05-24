@@ -230,7 +230,7 @@ async def _run_benchmark(
 
             str(
                 entry[
-                    "average_cost_usd"
+                    "average_total_cost_usd"
                 ]
             ),
         )

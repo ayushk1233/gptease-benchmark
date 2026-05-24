@@ -75,7 +75,23 @@ def save_json_report(
             }
         )
 
+    total_generation = sum(
+        e.metadata.get("generation_cost_usd", e.metadata.get("estimated_cost_usd", 0))
+        for e in evaluations
+    )
+    total_judge = sum(
+        e.metadata.get("judge_cost_usd", 0)
+        for e in evaluations
+    )
+    total_cost = sum(
+        e.metadata.get("total_cost_usd", e.metadata.get("estimated_cost_usd", 0))
+        for e in evaluations
+    )
+
     report = {
+        "generation_cost_usd": round(total_generation, 6),
+        "judge_cost_usd": round(total_judge, 6),
+        "total_cost_usd": round(total_cost, 6),
         "leaderboard": leaderboard,
         "evaluations": (
             serialized_evaluations
