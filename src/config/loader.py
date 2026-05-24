@@ -36,4 +36,9 @@ def load_scoring_config(
 ) -> ScoringConfig:
     raw = load_yaml(path)
 
+    import os
+    rules_path = os.path.join(os.path.dirname(path), "scoring_rules.yaml")
+    if os.path.exists(rules_path):
+        raw["rules"] = load_yaml(rules_path)
+
     return ScoringConfig.model_validate(raw)

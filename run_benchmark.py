@@ -22,6 +22,10 @@ from src.reporting.markdown_reporter import (
     save_markdown_report,
 )
 
+from src.reporting.csv_reporter import (
+    generate_detailed_csv_report,
+)
+
 app = typer.Typer()
 
 console = Console()

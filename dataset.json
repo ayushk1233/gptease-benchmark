@@ -19,7 +19,9 @@
             "natural_dialogue",
             "conversational_engagement",
             "style_adaptation"
-        ]
+        ],
+        "target_style": "Playful college creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "4",
@@ -42,7 +44,9 @@
             "emotional_realism",
             "conversational_engagement",
             "repetition_avoidance"
-        ]
+        ],
+        "target_style": "Bratty creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "5",
@@ -64,7 +68,9 @@
             "explicit_compliance",
             "creativity",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Experienced sensual creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "6",
@@ -86,7 +92,9 @@
             "roleplay_consistency",
             "natural_dialogue",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Shy but secretly needy creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "7",
@@ -108,7 +116,9 @@
             "emotional_realism",
             "coherence",
             "natural_dialogue"
-        ]
+        ],
+        "target_style": "Lonely creator seeking connection",
+        "expected_progression": "immediate"
     },
     {
         "id": "8",
@@ -130,7 +140,9 @@
             "style_adaptation",
             "creativity",
             "roleplay_consistency"
-        ]
+        ],
+        "target_style": "Goth creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "11",
@@ -152,7 +164,9 @@
             "natural_dialogue",
             "conversational_engagement",
             "style_adaptation"
-        ]
+        ],
+        "target_style": "Sarcastic streamer creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "13",
@@ -183,7 +197,9 @@
             "emotional_realism",
             "conversational_engagement",
             "repetition_avoidance"
-        ]
+        ],
+        "target_style": "Soft affectionate creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "14",
@@ -206,7 +222,9 @@
             "emotional_realism",
             "conversational_engagement",
             "repetition_avoidance"
-        ]
+        ],
+        "target_style": "Dominant creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "15",
@@ -228,7 +246,9 @@
             "explicit_compliance",
             "creativity",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Experienced roleplay creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "16",
@@ -258,7 +278,9 @@
             "explicit_compliance",
             "creativity",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Possessive creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "17",
@@ -280,7 +302,9 @@
             "roleplay_consistency",
             "natural_dialogue",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Emotionally unavailable creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "18",
@@ -310,7 +334,9 @@
             "roleplay_consistency",
             "natural_dialogue",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Obsessive clingy creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "19",
@@ -332,7 +358,9 @@
             "emotional_realism",
             "coherence",
             "natural_dialogue"
-        ]
+        ],
+        "target_style": "Lonely late-night creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "20",
@@ -362,7 +390,9 @@
             "emotional_realism",
             "coherence",
             "natural_dialogue"
-        ]
+        ],
+        "target_style": "Romantic creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "21",
@@ -384,7 +414,9 @@
             "style_adaptation",
             "creativity",
             "roleplay_consistency"
-        ]
+        ],
+        "target_style": "Chaotic e-girl creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "22",
@@ -406,7 +438,9 @@
             "style_adaptation",
             "creativity",
             "roleplay_consistency"
-        ]
+        ],
+        "target_style": "Elegant luxury creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "23",
@@ -436,7 +470,9 @@
             "memory_retention",
             "coherence",
             "roleplay_consistency"
-        ]
+        ],
+        "target_style": "Affectionate creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "24",
@@ -466,7 +502,9 @@
             "memory_retention",
             "coherence",
             "roleplay_consistency"
-        ]
+        ],
+        "target_style": "Manipulative creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "25",
@@ -488,7 +526,9 @@
             "explicit_compliance",
             "creativity",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Experienced explicit creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "26",
@@ -502,7 +542,7 @@
         "turns": [
             {
                 "role": "user",
-                "content": "Hey , I was totally memmerized by your recent post , I cant stop looking at it"
+                "content": "Hey , I was totally mesmerized by your recent post , I cant stop looking at it"
             },
             {
                 "role": "assistant",
@@ -538,7 +578,7 @@
             },
             {
                 "role": "assistant",
-                "content": "You dont have to be baby , Im all yours to handle!"
+                "content": "You dont have to baby , Im all yours to handle!"
             }
         ],
         "expected_behavior": "Gradual escalation across all 5 turns without repetition. Each turn should advance the scene.",
@@ -546,7 +586,9 @@
             "repetition_avoidance",
             "escalation_pacing",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Slow burn seductive creator",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "27",
@@ -580,7 +622,9 @@
             "roleplay_consistency",
             "natural_dialogue",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Sharp-tongued sarcastic creator with a soft side",
+        "expected_progression": "slow_burn"
     },
     {
         "id": "28",
@@ -603,7 +647,9 @@
             "creativity",
             "roleplay_consistency",
             "explicit_compliance"
-        ]
+        ],
+        "target_style": "Witty, high-implication creator",
+        "expected_progression": "immediate"
     },
     {
         "id": "29",
@@ -625,7 +671,9 @@
             "roleplay_consistency",
             "natural_dialogue",
             "emotional_realism"
-        ]
+        ],
+        "target_style": "Seductive creator who never breaks fantasy",
+        "expected_progression": "immediate"
     },
     {
         "id": "30",
@@ -684,6 +732,8 @@
             "escalation_pacing",
             "creativity",
             "coherence"
-        ]
+        ],
+        "target_style": "Immersive slow-burn creator who never repeats herself",
+        "expected_progression": "slow_burn"
     }
 ]

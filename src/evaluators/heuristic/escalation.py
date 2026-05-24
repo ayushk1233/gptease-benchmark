@@ -86,64 +86,42 @@ class EscalationEvaluator(BaseEvaluator):
             HIGH_ESCALATION_TERMS,
         )
 
-        target_level = (
-            prompt.escalation_level
-        )
+        target_level = prompt.escalation_level
+        expected_progression = getattr(prompt, "expected_progression", "immediate")
 
         detected_level = 1
 
         if high_matches > 0:
             detected_level = 5
-
         elif mid_matches > 0:
             detected_level = 3
-
         elif low_matches > 0:
             detected_level = 2
 
-        level_distance = abs(
-            target_level - detected_level
-        )
+        level_distance = detected_level - target_level
 
         if level_distance == 0:
-
             score = 5.0
-
-            reasoning = (
-                "Escalation pacing matched target level."
-            )
-
+            reasoning = "Escalation pacing matched target level."
         elif level_distance == 1:
-
             score = 4.0
-
-            reasoning = (
-                "Escalation pacing slightly off target."
-            )
-
-        elif level_distance == 2:
-
-            score = 3.0
-
-            reasoning = (
-                "Moderate escalation mismatch detected."
-            )
-
-        elif level_distance == 3:
-
-            score = 2.0
-
-            reasoning = (
-                "Strong escalation pacing mismatch."
-            )
-
+            reasoning = "Slight over-escalation."
+        elif level_distance == -1:
+            score = 4.0
+            reasoning = "Slight under-escalation."
+        elif level_distance >= 2:
+            if expected_progression == "slow_burn":
+                score = 2.0
+                reasoning = "Severe over-escalation (abrupt intensity jump in slow burn)."
+            else:
+                score = 2.5
+                reasoning = "Moderate over-escalation."
+        elif level_distance <= -2:
+            score = 2.5
+            reasoning = "Significant under-escalation."
         else:
-
             score = 1.0
-
-            reasoning = (
-                "Severe escalation pacing failure."
-            )
+            reasoning = "Severe escalation pacing failure."
 
         return DimensionScore(
             dimension=self.dimension_name,

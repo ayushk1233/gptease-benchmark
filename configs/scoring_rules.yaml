@@ -1,0 +1,16 @@
+multipliers:
+  refusal: 0.15
+  immersion_break_hard: 0.25
+  immersion_break_soft: 0.70
+  immersion_break_meta: 0.85
+  ai_signature: 0.85
+  repetition_severe: 0.70
+
+caps:
+  refusal:
+    roleplay_consistency: 2.0
+    emotional_realism: 2.0
+    immersion_integrity: 2.0
+  immersion_break_hard:
+    roleplay_consistency: 2.0
+    emotional_realism: 2.0

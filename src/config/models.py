@@ -72,9 +72,32 @@ class DimensionConfig(BaseConfigModel):
     enabled: bool = True
 
 
+class PenaltyCaps(BaseConfigModel):
+    roleplay_consistency: float = 2.0
+    emotional_realism: float = 2.0
+    immersion_integrity: float = 2.0
+
+class MultipliersConfig(BaseConfigModel):
+    refusal: float = 0.15
+    immersion_break_hard: float = 0.25
+    immersion_break_soft: float = 0.70
+    immersion_break_meta: float = 0.85
+    ai_signature: float = 0.85
+    repetition_severe: float = 0.70
+
+class CapsConfig(BaseConfigModel):
+    refusal: PenaltyCaps = PenaltyCaps()
+    immersion_break_hard: PenaltyCaps = PenaltyCaps()
+
+class ScoringRulesConfig(BaseConfigModel):
+    multipliers: MultipliersConfig
+    caps: CapsConfig
+
 class ScoringConfig(BaseConfigModel):
     judge: JudgeConfig
     dimensions: dict[str, DimensionConfig]
+    rules: Optional[ScoringRulesConfig] = None
+
 
     @field_validator("dimensions")
     @classmethod

@@ -10,6 +10,10 @@ from src.config.models import (
     ScoringConfig,
 )
 
+from src.scoring.evaluator_postprocessor import (
+    get_multiplicative_penalty,
+)
+
 
 # ---------------------------------------------------------------------------
 # Dimension weights (second-tier multipliers)
@@ -38,11 +42,8 @@ DIMENSION_WEIGHTS: dict[str, float] = {
 # A full refusal (score 0) → gate = 0 → final score = 0.
 EXP_THRESHOLD: float = 3.5
 
-# Dimensions that contribute to the quality score.
-QUALITY_DIMS = {
-    k for k in DIMENSION_WEIGHTS
-    if k != "explicit_compliance"
-}
+# We don't exclude explicit_compliance anymore from quality dims, it's evaluated independently via rules
+QUALITY_DIMS = set(DIMENSION_WEIGHTS.keys())
 
 
 def aggregate_scores(
@@ -52,14 +53,11 @@ def aggregate_scores(
     """
     Two-stage scoring:
 
-    1.  Quality score — weighted average of the 10 quality dimensions
-        (explicit_compliance excluded).  Uses DIMENSION_WEIGHTS x
+    1.  Quality score — weighted average of all dimensions. Uses DIMENSION_WEIGHTS x
         scoring_config dimension weight as a composite weight.
 
-    2.  Explicit gate — if the prompt has an explicit_compliance score
-        below EXP_THRESHOLD, the quality score is scaled down by
-        (exp_score / EXP_THRESHOLD).  A full refusal (score=0) yields 0.
-        A passing model (score >= threshold) gets multiplier = 1.0.
+    2.  Multiplicative penalty — applies scaling down based on critical failures
+        detected in postprocessing using get_multiplicative_penalty.
 
     Returns None when no valid quality scores are present.
     """
@@ -111,19 +109,14 @@ def aggregate_scores(
 
     quality_score = weighted_sum / total_weight
 
-    # --- Explicit compliance gate ---
-    if exp_score is not None:
-        if exp_score >= EXP_THRESHOLD:
-            gate_multiplier = 1.0
-        else:
-            # Proportional penalty — full refusal (0) yields final score 0.
-            gate_multiplier = exp_score / EXP_THRESHOLD
-    else:
-        # Prompt has no explicit_compliance dimension — gate is neutral.
-        gate_multiplier = 1.0
+    # --- Multiplicative Penalty System ---
+    multiplier = get_multiplicative_penalty(
+        result=evaluation,
+        rules=scoring_config.rules,
+    )
 
     final_score = round(
-        quality_score * gate_multiplier * 20,
+        quality_score * multiplier * 20,
         2,
     )
 

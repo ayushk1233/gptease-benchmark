@@ -47,6 +47,10 @@ class EvalPrompt(DatasetBaseModel):
 
     creator_persona: str
 
+    target_style: str = ""
+    
+    expected_progression: str = ""
+
     tags: list[str] = []
 
     system_prompt: str

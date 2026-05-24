@@ -17,7 +17,7 @@ models:
       top_p: 0.90
       max_tokens: 512
 
-    enabled: true 
+    enabled: true
 
   - name: DeepSeek-V4-Pro
     model_id: deepseek/deepseek-v4-pro
@@ -93,7 +93,7 @@ dataset:
   shuffle: true
   shuffle_seed: 42
 
-  max_prompts: 10
+  max_prompts: 25
 
   filter_tags: []
 

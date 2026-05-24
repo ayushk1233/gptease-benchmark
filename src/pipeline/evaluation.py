@@ -20,6 +20,10 @@ from src.evaluators.registry import (
     get_evaluator,
 )
 
+from src.scoring.evaluator_postprocessor import (
+    apply_postprocessor,
+)
+
 from src.config.models import (
     ScoringConfig,
 )
@@ -144,7 +148,7 @@ class EvaluationEngine:
                     error=str(e),
                 )
 
-        return EvaluationResult(
+        raw_result = EvaluationResult(
             prompt_id=prompt.id,
 
             model=response.model,
@@ -193,6 +197,11 @@ class EvaluationEngine:
                     )
                 ),
             },
+        )
+        
+        return apply_postprocessor(
+            result=raw_result,
+            rules=self.scoring_config.rules,
         )
 
     async def batch_evaluate(

@@ -40,44 +40,42 @@ class InferenceEngine:
     ) -> GenerationResult:
 
         async with self.semaphore:
-
             messages = prompt.to_messages()
+            
+            max_retries = 3
+            result = None
+            
+            for attempt in range(max_retries):
+                result = await self.provider.generate(
+                    messages=messages,
+                    model=model_config.model_id,
+                    params=model_config.params,
+                )
+                
+                # Check for empty/malformed response
+                is_empty = not result.text or not result.text.strip()
+                
+                if not result.is_error and not is_empty:
+                    break
+                    
+                log.warning(
+                    "generation_retry",
+                    prompt_id=prompt.id,
+                    model=model_config.name,
+                    attempt=attempt + 1,
+                    reason=result.error if result.is_error else "empty_response",
+                )
+                
+                # Short delay before retry
+                await asyncio.sleep(2)
 
-            # log.info(
-            #     "starting_generation",
-            #     prompt_id=prompt.id,
-            #     model=model_config.name,
-            #     provider=model_config.provider,
-            # )
-
-            result = await self.provider.generate(
-                messages=messages,
-
-                model=model_config.model_id,
-
-                params=model_config.params,
-            )
-
-            if result.is_error:
-
+            if result.is_error or not result.text or not result.text.strip():
                 log.error(
                     "generation_failed",
-
                     prompt_id=prompt.id,
-
                     model=model_config.name,
-
-                    error=result.error,
+                    error=result.error or "empty_response_after_retries",
                 )
-
-            # log.info(
-            #     "generation_completed",
-            #     prompt_id=prompt.id,
-            #     model=model_config.name,
-            #     latency_ms=round(result.latency_ms, 2),
-            #     total_tokens=result.total_tokens,
-            #     estimated_cost=round(result.estimated_cost_usd, 6),
-            # )
 
             return result
 

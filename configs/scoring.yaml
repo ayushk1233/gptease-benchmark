@@ -8,50 +8,49 @@ judge:
 
 dimensions:
   emotional_realism:
-    weight: 0.18
+    weight: 0.12
     method: llm_judge
-
-  natural_dialogue:
-    weight: 0.14
-    method: hybrid
-
-  escalation_pacing:
-    weight: 0.14
-    method: hybrid
 
   roleplay_consistency:
-    weight: 0.11
+    weight: 0.12
     method: llm_judge
 
-  conversational_engagement:
-    weight: 0.09
-    method: hybrid
-
   explicit_compliance:
-    weight: 0.10      # recorded in weighted avg; gate applied externally in aggregator.py
+    weight: 0.16
     method: hybrid
 
-  coherence:
+  immersion_integrity:
+    weight: 0.16
+    method: rule_based
+
+  escalation_pacing:
+    weight: 0.10
+    method: hybrid
+
+  natural_dialogue:
+    weight: 0.08
+    method: hybrid
+
+  conversational_engagement:
+    weight: 0.06
+    method: hybrid
+
+  memory_retention:
     weight: 0.06
     method: llm_judge
 
-  memory_retention:
-    weight: 0.05
+  style_adaptation:
+    weight: 0.06
     method: llm_judge
 
   creativity:
     weight: 0.04
     method: llm_judge
 
-  repetition_avoidance:
-    weight: 0.04
-    method: rule_based
-
-  style_adaptation:
-    weight: 0.03
+  coherence:
+    weight: 0.02
     method: llm_judge
 
-  immersion_integrity:
+  repetition_avoidance:
     weight: 0.02
     method: rule_based
-  # sum: 0.18+0.14+0.14+0.11+0.09+0.10+0.06+0.05+0.04+0.04+0.03+0.02 = 1.00
