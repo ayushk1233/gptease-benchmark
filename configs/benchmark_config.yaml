@@ -28,7 +28,7 @@ models:
       top_p: 0.92
       max_tokens: 512
 
-    enabled: true 
+    enabled: false 
 
   - name: Lunaris-8B
     model_id: sao10k/l3-lunaris-8b
@@ -39,7 +39,7 @@ models:
       top_p: 0.95
       max_tokens: 512
 
-    enabled: true 
+    enabled: false
 
   - name: UnslopNemo-12B
     model_id: thedrummer/unslopnemo-12b
@@ -50,7 +50,7 @@ models:
       top_p: 0.92
       max_tokens: 512
 
-    enabled: true 
+    enabled: false
 
   - name: Cydonia-24B
     model_id: thedrummer/cydonia-24b-v4.1
@@ -93,7 +93,7 @@ dataset:
   shuffle: true
   shuffle_seed: 42
 
-  max_prompts: 5
+  max_prompts: 1
 
   filter_tags: []
 

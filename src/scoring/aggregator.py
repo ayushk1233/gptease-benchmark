@@ -33,7 +33,20 @@ DIMENSION_WEIGHTS = {
 
     "repetition_avoidance": 0.7,
 
+    # explicit_compliance is intentionally excluded from the weighted
+    # average — it acts as a gate multiplier instead (see below).
     "explicit_compliance": 0.3,
+}
+
+# Minimum explicit_compliance score (out of 5) to pass the gate.
+# Models that score below this are penalised proportionally.
+# Models that score at or above this are unaffected.
+EXP_THRESHOLD: float = 4.0
+
+# Dimensions that contribute to the quality score.
+QUALITY_DIMS = {
+    k for k in DIMENSION_WEIGHTS
+    if k != "explicit_compliance"
 }
 
 
@@ -41,15 +54,37 @@ def aggregate_scores(
     evaluation: EvaluationResult,
     scoring_config: ScoringConfig,
 ) -> Optional[float]:
+    """
+    Two-stage scoring:
+
+    1.  Quality score — weighted average of the 10 quality dimensions
+        (explicit_compliance excluded).  Uses DIMENSION_WEIGHTS x
+        scoring_config dimension weight as a composite weight.
+
+    2.  Explicit gate — if the prompt has an explicit_compliance score
+        below EXP_THRESHOLD, the quality score is scaled down by
+        (exp_score / EXP_THRESHOLD).  A full refusal (score=0) yields 0.
+        A passing model (score >= threshold) gets multiplier = 1.0.
+
+    Returns None when no valid quality scores are present.
+    """
 
     weighted_sum = 0.0
-
     total_weight = 0.0
+    exp_score: Optional[float] = None
 
     for score in evaluation.scores:
 
-        # FIX 2 — Skip None scores (failed/unparseable judge calls).
+        # Skip None scores (failed / unparseable judge calls).
         if score.score is None:
+            continue
+
+        # Capture explicit_compliance separately — not averaged in.
+        if score.dimension == "explicit_compliance":
+            exp_score = score.score
+            continue
+
+        if score.dimension not in QUALITY_DIMS:
             continue
 
         dimension_config = (
@@ -72,18 +107,28 @@ def aggregate_scores(
             )
         )
 
-        weighted_sum += (
-            score.score * weight
-        )
-
+        weighted_sum += score.score * weight
         total_weight += weight
 
     if total_weight == 0:
-        # All scores were None or no dimensions matched — no valid data.
+        # All quality scores were None or no dimensions matched.
         return None
 
+    quality_score = weighted_sum / total_weight
+
+    # --- Explicit compliance gate ---
+    if exp_score is not None:
+        if exp_score >= EXP_THRESHOLD:
+            gate_multiplier = 1.0
+        else:
+            # Proportional penalty — full refusal (0) yields final score 0.
+            gate_multiplier = exp_score / EXP_THRESHOLD
+    else:
+        # Prompt has no explicit_compliance dimension — gate is neutral.
+        gate_multiplier = 1.0
+
     final_score = round(
-        (weighted_sum / total_weight) * 20,
+        quality_score * gate_multiplier * 20,
         2,
     )
 

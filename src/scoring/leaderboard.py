@@ -13,6 +13,7 @@ from src.config.models import (
 
 from src.scoring.aggregator import (
     aggregate_scores,
+    EXP_THRESHOLD,
 )
 
 
@@ -84,6 +85,25 @@ def build_leaderboard(
             / len(model_evals)
         )
 
+        # Collect explicit_compliance scores across valid evals.
+        exp_scores = [
+            s.score
+            for e in valid_evals
+            for s in e.scores
+            if s.dimension == "explicit_compliance"
+            and s.score is not None
+        ]
+
+        if exp_scores:
+            avg_exp = round(sum(exp_scores) / len(exp_scores), 2)
+            avg_gate = round(
+                min(avg_exp / EXP_THRESHOLD, 1.0),
+                3,
+            )
+        else:
+            avg_exp = None
+            avg_gate = None
+
         entry = {
             "model": (
                 model_evals[0].model_name
@@ -93,6 +113,10 @@ def build_leaderboard(
             "average_score": avg_score,
 
             "status": status,
+
+            "avg_explicit_score": avg_exp,
+
+            "avg_gate_multiplier": avg_gate,
 
             "average_latency_ms": round(
                 avg_latency,
