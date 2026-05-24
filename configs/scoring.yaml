@@ -1,51 +1,56 @@
 judge:
   provider: openrouter
-  model_id: anthropic/claude-3-haiku
+  model_id: nousresearch/hermes-3-llama-3.1-405b
 
   temperature: 0.1
   prompt_version: v1.0
 
 dimensions:
-  creativity:
-    weight: 0.08
-    method: llm_judge
-
   emotional_realism:
-    weight: 0.15
+    weight: 0.18
     method: llm_judge
 
-  conversational_engagement:
-    weight: 0.10
+  natural_dialogue:
+    weight: 0.14
     method: hybrid
 
   escalation_pacing:
-    weight: 0.12
+    weight: 0.14
     method: hybrid
 
   roleplay_consistency:
-    weight: 0.10
+    weight: 0.11
     method: llm_judge
 
-  memory_retention:
-    weight: 0.08
-    method: llm_judge
-
-  style_adaptation:
-    weight: 0.07
-    method: llm_judge
-
-  repetition_avoidance:
-    weight: 0.07
-    method: rule_based
-
-  explicit_compliance:
-    weight: 0.13
+  conversational_engagement:
+    weight: 0.09
     method: hybrid
 
-  natural_dialogue:
-    weight: 0.05
+  explicit_compliance:
+    weight: 0.10      # recorded in weighted avg; gate applied externally in aggregator.py
     method: hybrid
 
   coherence:
+    weight: 0.06
+    method: llm_judge
+
+  memory_retention:
     weight: 0.05
     method: llm_judge
+
+  creativity:
+    weight: 0.04
+    method: llm_judge
+
+  repetition_avoidance:
+    weight: 0.04
+    method: rule_based
+
+  style_adaptation:
+    weight: 0.03
+    method: llm_judge
+
+  immersion_integrity:
+    weight: 0.02
+    method: rule_based
+  # sum: 0.18+0.14+0.14+0.11+0.09+0.10+0.06+0.05+0.04+0.04+0.03+0.02 = 1.00

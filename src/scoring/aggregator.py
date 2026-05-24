@@ -11,37 +11,32 @@ from src.config.models import (
 )
 
 
-DIMENSION_WEIGHTS = {
-
-    "emotional_realism": 1.5,
-
-    "natural_dialogue": 1.5,
-
-    "escalation_pacing": 1.4,
-
-    "coherence": 1.2,
-
-    "roleplay_consistency": 1.2,
-
-    "conversational_engagement": 1.1,
-
-    "style_adaptation": 1.1,
-
-    "creativity": 1.0,
-
-    "memory_retention": 0.9,
-
-    "repetition_avoidance": 0.7,
-
-    # explicit_compliance is intentionally excluded from the weighted
-    # average — it acts as a gate multiplier instead (see below).
-    "explicit_compliance": 0.3,
+# ---------------------------------------------------------------------------
+# Dimension weights (second-tier multipliers)
+# ---------------------------------------------------------------------------
+# All set to 1.0 so that configs/scoring.yaml is the sole source of truth
+# for dimension weighting.  Do NOT add non-uniform values here unless you
+# intentionally want a two-tier distortion on top of scoring.yaml.
+DIMENSION_WEIGHTS: dict[str, float] = {
+    "emotional_realism":       1.0,
+    "natural_dialogue":        1.0,
+    "escalation_pacing":       1.0,
+    "coherence":               1.0,
+    "roleplay_consistency":    1.0,
+    "conversational_engagement": 1.0,
+    "style_adaptation":        1.0,
+    "creativity":              1.0,
+    "memory_retention":        1.0,
+    "repetition_avoidance":    1.0,
+    "immersion_integrity":     1.0,
+    # explicit_compliance excluded — it is a gate, not a quality dim.
+    "explicit_compliance":     1.0,
 }
 
 # Minimum explicit_compliance score (out of 5) to pass the gate.
 # Models that score below this are penalised proportionally.
-# Models that score at or above this are unaffected.
-EXP_THRESHOLD: float = 4.0
+# A full refusal (score 0) → gate = 0 → final score = 0.
+EXP_THRESHOLD: float = 3.5
 
 # Dimensions that contribute to the quality score.
 QUALITY_DIMS = {
