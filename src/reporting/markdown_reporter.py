@@ -23,11 +23,11 @@ def generate_markdown_report(
     )
 
     lines.append(
-        "| Rank | Model | Score | Avg Latency (ms) | Avg Cost ($) |"
+        "| Rank | Model | Judge Model | Score | Avg Latency (ms) | Avg Cost ($) |"
     )
 
     lines.append(
-        "|---|---|---|---|---|"
+        "|---|---|---|---|---|---|"
     )
 
     for idx, entry in enumerate(
@@ -38,6 +38,7 @@ def generate_markdown_report(
         lines.append(
             f"| {idx} "
             f"| {entry['model']} "
+            f"| {entry.get('judge_model', 'Unknown')} "
             f"| {entry['average_score']} "
             f"| {entry['average_latency_ms']} "
             f"| {entry['average_total_cost_usd']} |"

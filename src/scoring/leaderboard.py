@@ -107,6 +107,10 @@ def build_leaderboard(
             / len(model_evals)
         )
 
+        judge_model = "Unknown"
+        if valid_evals:
+            judge_model = valid_evals[0].metadata.get("judge_model", "Unknown")
+
         # Collect explicit_compliance scores across valid evals.
         exp_scores = [
             s.score
@@ -131,6 +135,8 @@ def build_leaderboard(
                 model_evals[0].model_name
                 or model
             ),
+            
+            "judge_model": judge_model,
 
             "average_score": avg_score,
 

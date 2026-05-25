@@ -52,9 +52,14 @@ class ProviderConfig(BaseConfigModel):
     pricing: ProviderModelPricing = ProviderModelPricing()
 
 
+class JudgeRoutingConfig(BaseConfigModel):
+    default_judge: str
+    overrides: dict[str, str] = {}
+
+
 class JudgeConfig(BaseConfigModel):
     provider: str
-    model_id: str
+    model_id: Optional[str] = None
     temperature: float = 0.1
     prompt_version: str = "v1.0"
     save_raw_judge_outputs: bool = False
@@ -95,6 +100,7 @@ class ScoringRulesConfig(BaseConfigModel):
 
 class ScoringConfig(BaseConfigModel):
     judge: JudgeConfig
+    judge_routing: JudgeRoutingConfig
     dimensions: dict[str, DimensionConfig]
     rules: Optional[ScoringRulesConfig] = None
 

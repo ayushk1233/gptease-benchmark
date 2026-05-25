@@ -204,6 +204,11 @@ async def _run_benchmark(
         "Model",
         style="green",
     )
+    
+    table.add_column(
+        "Judge Model",
+        style="blue",
+    )
 
     table.add_column(
         "Score",
@@ -229,6 +234,8 @@ async def _run_benchmark(
             str(idx),
 
             entry["model"],
+            
+            entry.get("judge_model", "Unknown"),
 
             str(
                 entry["average_score"]

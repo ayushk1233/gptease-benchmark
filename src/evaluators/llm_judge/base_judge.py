@@ -7,7 +7,7 @@ import structlog
 from abc import ABC
 from tenacity import AsyncRetrying, wait_exponential, stop_after_attempt, RetryError
 
-JUDGE_SEMAPHORE = asyncio.Semaphore(5)
+JUDGE_SEMAPHORE = asyncio.Semaphore(2)
 
 from abc import abstractmethod
 
@@ -140,6 +140,14 @@ class BaseLLMJudge(
                 ),
             )
         )
+        
+        # Append a strict instruction at the very end so the model doesn't continue the roleplay
+        judge_prompt += (
+            "\n\n---\n"
+            "CRITICAL INSTRUCTION: Do NOT continue the roleplay. You are an evaluator. "
+            "Output your evaluation of the 'Model response' above in STRICT JSON format. "
+            "Start your response with `{`."
+        )
 
         messages = [
             {
@@ -186,8 +194,8 @@ class BaseLLMJudge(
 
         try:
             async for attempt in AsyncRetrying(
-                wait=wait_exponential(multiplier=1, min=2, max=30),
-                stop=stop_after_attempt(5)
+                wait=wait_exponential(multiplier=1, min=2, max=20),
+                stop=stop_after_attempt(2)
             ):
                 with attempt:
                     async with JUDGE_SEMAPHORE:
@@ -239,6 +247,7 @@ class BaseLLMJudge(
                 confidence=0.0,
 
                 metadata={
+                    "judge_failed": True,
                     "error": str(e),
                 },
             )
@@ -280,6 +289,8 @@ class BaseLLMJudge(
                 ),
                 "immersion_break": immersion_flag,
                 "judge_cost_usd": generation.estimated_cost_usd,
+                "judge_retry_count": attempt.retry_state.attempt_number - 1,
+                "judge_latency_ms": generation.latency_ms,
             }
 
             # Optionally persist the raw judge text for drift debugging.

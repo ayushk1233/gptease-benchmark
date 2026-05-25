@@ -1,10 +1,13 @@
 judge:
   provider: openrouter
-  model_id: deepseek/deepseek-v4-pro
-
   temperature: 0.1
   prompt_version: v1.0
   save_raw_judge_outputs: true
+
+judge_routing:
+  default_judge: deepseek/deepseek-v4-pro
+  overrides:
+    DeepSeek-V4-Pro: moonshotai/kimi-k2.6
 
 dimensions:
 
