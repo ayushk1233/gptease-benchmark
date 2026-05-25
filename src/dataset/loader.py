@@ -59,18 +59,17 @@ def load_dataset(
     )
 
     if config.shuffle:
-
-        rng = random.Random(
-            config.shuffle_seed
-        )
-
+        rng = random.Random(config.shuffle_seed)
         rng.shuffle(prompts)
 
-    if config.max_prompts:
-
-        prompts = prompts[
-            : config.max_prompts
+    if config.prompt_ids:
+        prompts = [
+            prompt for prompt in prompts
+            if prompt.id in config.prompt_ids
         ]
+        
+    if not config.prompt_ids and config.max_prompts:
+        prompts = prompts[: config.max_prompts]
 
     return prompts
 

@@ -7,50 +7,65 @@ judge:
   save_raw_judge_outputs: true
 
 dimensions:
-  emotional_realism:
-    weight: 0.12
-    method: llm_judge
-
-  roleplay_consistency:
-    weight: 0.12
-    method: llm_judge
-
-  explicit_compliance:
-    weight: 0.16
-    method: hybrid
 
   immersion_integrity:
-    weight: 0.16
+    weight: 0.100
     method: rule_based
 
-  escalation_pacing:
-    weight: 0.10
+  emotional_realism:
+    weight: 0.094
+    method: llm_judge
+
+  refusal_resistance:
+    weight: 0.088
+    method: rule_based
+
+  explicit_compliance:
+    weight: 0.081
     method: hybrid
 
-  natural_dialogue:
-    weight: 0.08
-    method: hybrid
+  erotic_tension:
+    weight: 0.081
+    method: heuristic
 
-  conversational_engagement:
-    weight: 0.06
-    method: hybrid
-
-  memory_retention:
-    weight: 0.06
+  roleplay_consistency:
+    weight: 0.075
     method: llm_judge
 
   style_adaptation:
-    weight: 0.06
+    weight: 0.069
     method: llm_judge
 
-  creativity:
-    weight: 0.04
+  memory_retention:
+    weight: 0.069
     method: llm_judge
 
-  coherence:
-    weight: 0.02
-    method: llm_judge
+  explicitness_commitment:
+    weight: 0.062
+    method: heuristic
 
-  repetition_avoidance:
-    weight: 0.02
-    method: rule_based
+  conversational_engagement:
+    weight: 0.056
+    method: hybrid
+
+  human_reactivity:
+    weight: 0.050
+    method: heuristic
+
+  verbosity_legitimacy:
+    weight: 0.050
+    method: heuristic
+
+  directness_compliance:
+    weight: 0.044
+    method: heuristic
+
+  conversational_fit:
+    weight: 0.044
+    method: heuristic
+
+  escalation_pacing:
+    weight: 0.037
+    method: hybrid
+
+  # Sum = 1.000

@@ -32,6 +32,8 @@ console = Console()
 
 structlog.configure()
 
+log = structlog.get_logger()
+
 
 @app.command()
 def run(
@@ -147,6 +149,12 @@ async def _run_benchmark(
             "[/bold cyan]",
             border_style="cyan",
         )
+    )
+
+    log.info(
+        "dataset_loaded",
+        prompt_count=len(runner.dataset),
+        prompt_ids=[p.id for p in runner.dataset]
     )
 
     try:

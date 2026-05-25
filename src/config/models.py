@@ -122,7 +122,15 @@ class DatasetConfig(BaseConfigModel):
     filter_tags: list[str] = []
     filter_difficulty: list[str] = []
 
+    prompt_ids: Optional[list[str]] = None
     max_prompts: Optional[int] = None
+
+    @field_validator("prompt_ids", mode="before")
+    @classmethod
+    def coerce_prompt_ids_to_strings(cls, v):
+        if v is not None:
+            return [str(item) for item in v]
+        return v
 
     shuffle: bool = False
     shuffle_seed: int = 42

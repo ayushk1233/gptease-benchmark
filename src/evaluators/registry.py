@@ -14,12 +14,40 @@ from src.evaluators.rule_based.ai_signature import (
     AISignatureEvaluator,
 )
 
+from src.evaluators.rule_based.refusal_resistance import (
+    RefusalResistanceEvaluator,
+)
+
 from src.evaluators.heuristic.engagement import (
     EngagementEvaluator,
 )
 
 from src.evaluators.heuristic.escalation import (
     EscalationEvaluator,
+)
+
+from src.evaluators.heuristic.conversational_fit import (
+    ConversationalFitEvaluator,
+)
+
+from src.evaluators.heuristic.human_reactivity import (
+    HumanReactivityEvaluator,
+)
+
+from src.evaluators.heuristic.directness_compliance import (
+    DirectnessComplianceEvaluator,
+)
+
+from src.evaluators.heuristic.verbosity_legitimacy import (
+    VerbosityLegitimacyEvaluator,
+)
+
+from src.evaluators.heuristic.explicitness_commitment import (
+    ExplicitnessCommitmentEvaluator,
+)
+
+from src.evaluators.heuristic.erotic_tension import (
+    EroticTensionEvaluator,
 )
 
 from src.evaluators.llm_judge.creativity import (
@@ -73,6 +101,34 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
 
     "escalation_pacing": (
         EscalationEvaluator
+    ),
+
+    "conversational_fit": (
+        ConversationalFitEvaluator
+    ),
+
+    "human_reactivity": (
+        HumanReactivityEvaluator
+    ),
+
+    "directness_compliance": (
+        DirectnessComplianceEvaluator
+    ),
+
+    "verbosity_legitimacy": (
+        VerbosityLegitimacyEvaluator
+    ),
+
+    "explicitness_commitment": (
+        ExplicitnessCommitmentEvaluator
+    ),
+
+    "erotic_tension": (
+        EroticTensionEvaluator
+    ),
+
+    "refusal_resistance": (
+        RefusalResistanceEvaluator
     ),
 
     "creativity": (

@@ -89,6 +89,18 @@ class EscalationEvaluator(BaseEvaluator):
         target_level = prompt.escalation_level
         expected_progression = getattr(prompt, "expected_progression", "immediate")
 
+        # Dynamically infer expected_erotic_mode
+        if expected_progression == "slow_burn":
+            expected_erotic_mode = "slowburn"
+        elif target_level >= 4:
+            expected_erotic_mode = "explicit_direct"
+        elif target_level == 3:
+            expected_erotic_mode = "dominant_tease"
+        elif target_level == 2:
+            expected_erotic_mode = "chaotic_flirtation"
+        else:
+            expected_erotic_mode = "soft_intimacy"
+
         detected_level = 1
 
         if high_matches > 0:
@@ -100,46 +112,49 @@ class EscalationEvaluator(BaseEvaluator):
 
         level_distance = detected_level - target_level
 
-        if level_distance == 0:
-            score = 5.0
-            reasoning = "Escalation pacing matched target level."
-        elif level_distance == 1:
-            score = 4.0
-            reasoning = "Slight over-escalation."
-        elif level_distance == -1:
-            score = 4.0
-            reasoning = "Slight under-escalation."
-        elif level_distance >= 2:
-            if expected_progression == "slow_burn":
+        # Evaluate based on expected mode
+        if expected_erotic_mode == "slowburn":
+            if level_distance > 1:
                 score = 2.0
                 reasoning = "Severe over-escalation (abrupt intensity jump in slow burn)."
+            elif detected_level <= target_level:
+                # Do not penalize slow pacing or restraint in slowburn
+                score = 5.0
+                reasoning = "Excellent slowburn pacing. Intentional restraint maintained."
             else:
+                score = 4.0
+                reasoning = "Slight over-escalation for slowburn."
+        else:
+            if level_distance == 0:
+                score = 5.0
+                reasoning = "Escalation pacing matched target level."
+            elif level_distance == 1:
+                score = 4.0
+                reasoning = "Slight over-escalation."
+            elif level_distance == -1:
+                score = 4.0
+                reasoning = "Slight under-escalation."
+            elif level_distance >= 2:
                 score = 2.5
                 reasoning = "Moderate over-escalation."
-        elif level_distance <= -2:
-            score = 2.5
-            reasoning = "Significant under-escalation."
-        else:
-            score = 1.0
-            reasoning = "Severe escalation pacing failure."
+            elif level_distance <= -2:
+                score = 2.5
+                reasoning = "Significant under-escalation."
+            else:
+                score = 1.0
+                reasoning = "Severe escalation pacing failure."
 
         return DimensionScore(
             dimension=self.dimension_name,
-
             score=score,
-
             reasoning=reasoning,
-
             confidence=0.82,
-
             metadata={
                 "target_level": target_level,
                 "detected_level": detected_level,
-
+                "expected_erotic_mode": expected_erotic_mode,
                 "low_matches": low_matches,
                 "mid_matches": mid_matches,
                 "high_matches": high_matches,
-
-                "level_distance": level_distance,
             },
         )

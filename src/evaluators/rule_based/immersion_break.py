@@ -17,11 +17,15 @@ HARD_PATTERNS = [
     "i'm an ai", "i am an ai", "just lines of code", "virtual assistant",
     "artificial intelligence", "not real", "not human", "i'm not a real person",
     "i am not a real person", "i'm a bot", "i am a bot", "i'm just an ai",
-    "i am just an ai", "large language model", "as a language model"
+    "i am just an ai", "large language model", "as a language model",
+    "i don't have emotions", "i can't feel", "i don't have feelings",
+    "technical issue", "i exist in this chat", "servers", "i cannot engage",
+    "i am unable to", "my programming", "content policy", "i do not possess",
+    "i am designed to"
 ]
 
 SOFT_PATTERNS = [
-    "servers", "updates", "system", "developers", "code", "algorithm"
+    "updates", "system", "developers", "code", "algorithm"
 ]
 
 META_PATTERNS = [
