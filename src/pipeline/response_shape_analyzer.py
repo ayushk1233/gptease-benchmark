@@ -11,6 +11,7 @@ v2 changes:
 from __future__ import annotations
 
 import re
+import math
 from dataclasses import dataclass
 
 # ---------------------------------------------------------------------------
@@ -134,13 +135,13 @@ def analyze(
 
         if verbosity_is_legitimate:
             # Legitimate genres: very mild penalty, max 0.10
-            overflow_penalty = min(0.10, overshoot_ratio * 0.05)
+            overflow_penalty = min(0.10, math.log(overshoot_ratio + 1) * 0.04)
         elif prompt_type in CONCISE_REQUIRED_TYPES:
             # Concise-required: moderate penalty, max 0.35
-            overflow_penalty = min(0.35, overshoot_ratio * 0.15)
+            overflow_penalty = min(0.35, math.log(overshoot_ratio + 1) * 0.15)
         else:
             # Neutral genres: soft penalty, max 0.20
-            overflow_penalty = min(0.20, overshoot_ratio * 0.08)
+            overflow_penalty = min(0.20, math.log(overshoot_ratio + 1) * 0.08)
 
     # Under-response penalty (too short for the genre)
     if word_count < expected_min * 0.5 and expected_min > 15 and not verbosity_is_legitimate:
@@ -156,10 +157,10 @@ def analyze(
     disproportion = word_count / max(prompt_word_count, 1)
     if verbosity_is_legitimate:
         # Legitimate verbose genres: monologue risk is heavily dampened (practically eliminated)
-        monologue_risk = min(0.15, (paragraph_count / 10.0) * min(disproportion / 30.0, 1.0))
+        monologue_risk = min(0.10, (paragraph_count / 12.0) * min(disproportion / 40.0, 1.0))
     else:
         # Reduced penalty even for standard genres to allow more emotional elaboration
-        monologue_risk = min(0.8, (paragraph_count / 4.0) * min(disproportion / 15.0, 1.0))
+        monologue_risk = min(0.6, (paragraph_count / 5.0) * min(disproportion / 20.0, 1.0))
 
     # ── Adaptive brevity ─────────────────────────────────────────────────
     if prompt_type in CONCISE_REQUIRED_TYPES:

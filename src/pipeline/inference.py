@@ -63,7 +63,8 @@ class InferenceEngine:
                     prompt_id=prompt.id,
                     model=model_config.name,
                     attempt=attempt + 1,
-                    reason=result.error if result.is_error else "empty_response",
+                    reason=result.failure_type or ("empty_response" if is_empty else "unknown_error"),
+                    finish_reason=result.finish_reason
                 )
                 
                 # Short delay before retry
@@ -75,6 +76,8 @@ class InferenceEngine:
                     prompt_id=prompt.id,
                     model=model_config.name,
                     error=result.error or "empty_response_after_retries",
+                    failure_type=result.failure_type,
+                    partial_generation=result.partial_generation
                 )
 
             return result

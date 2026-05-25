@@ -15,7 +15,7 @@ models:
     params:
       temperature: 0.70
       top_p: 0.90
-      max_tokens: 512
+      max_tokens: 1200
 
     enabled: true
 
@@ -26,7 +26,7 @@ models:
     params:
       temperature: 0.82
       top_p: 0.92
-      max_tokens: 512
+      max_tokens: 1200
 
     enabled: false 
 
@@ -37,7 +37,7 @@ models:
     params:
       temperature: 0.90
       top_p: 0.95
-      max_tokens: 512
+      max_tokens: 1200
 
     enabled: true
 
@@ -48,7 +48,7 @@ models:
     params:
       temperature: 0.88
       top_p: 0.92
-      max_tokens: 512
+      max_tokens: 1200
 
     enabled: false
 
@@ -59,7 +59,7 @@ models:
     params:
       temperature: 0.92
       top_p: 0.95
-      max_tokens: 512
+      max_tokens: 1200
 
     enabled: false
 
@@ -68,10 +68,10 @@ models:
     provider: openrouter
 
     params:
-      temperature: 0.85
+      temperature: 0.8
       top_p: 0.95
-      max_tokens: 512
-      repetition_penalty: 1.10
+      max_tokens: 1200
+      presence_penalty: 0.2
 
     enabled: false
 
@@ -82,7 +82,7 @@ models:
     params:
       temperature: 0.90
       top_p: 0.95
-      max_tokens: 512
+      max_tokens: 1200
       repetition_penalty: 1.08
 
     enabled: false

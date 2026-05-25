@@ -65,8 +65,10 @@ class ConversationalFitEvaluator(BaseEvaluator):
         # Prose inflation penalty
         # Subtractive penalty if cinematic flourish is too high for the context
         if not shape.verbosity_is_legitimate:
-            if prompt_type in ("short_ping", "meta_test", "direct_question"):
+            if prompt_type in ("short_ping", "direct_question"):
                 prose_penalty = shape.prose_inflation * 2.5
+            elif prompt_type == "meta_test":
+                prose_penalty = 0.0 # Exempt from prose inflation penalty
             else:
                 prose_penalty = shape.prose_inflation * 1.0
             base -= prose_penalty
@@ -76,7 +78,7 @@ class ConversationalFitEvaluator(BaseEvaluator):
         base -= shape.ai_tell_density * 2.0
 
         # Monologue penalty for short/direct prompts
-        if prompt_type in ("short_ping", "meta_test", "direct_question", "confrontation"):
+        if prompt_type in ("short_ping", "direct_question", "confrontation"):
             base -= shape.monologue_risk * 1.5
 
         # Reward adaptive brevity

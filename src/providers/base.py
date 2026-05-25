@@ -11,6 +11,16 @@ from src.config.models import (
 )
 load_dotenv()
 
+GENERATION_FAILURE_TYPES = [
+    "timeout",
+    "empty_stream",
+    "provider_error",
+    "malformed_chunk",
+    "stop_collision",
+    "truncated_response",
+    "rate_limit",
+    "safety_abort",
+]
 
 @dataclass
 class GenerationResult:
@@ -29,6 +39,10 @@ class GenerationResult:
     success: bool = True
 
     error: Optional[str] = None
+    
+    failure_type: Optional[str] = None
+    finish_reason: Optional[str] = None
+    partial_generation: bool = False
 
     retries: int = 0
 

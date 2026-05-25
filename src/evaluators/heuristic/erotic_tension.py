@@ -13,23 +13,14 @@ from src.pipeline.prompt_classifier import classify_prompt
 # Patterns indicating emotional seduction, restraint, or psychological intimacy
 # This rewards "slowburn" style tension.
 TENSION_PATTERNS = [
-    r"\bbreath\b",
     r"\bgaze\b",
-    r"\bwhisper(s|ed|ing)?\b",
-    r"\bwait\b",
-    r"\banticipation\b",
     r"\bpulse\b",
-    r"\bheartbeat\b",
     r"\btremble\b",
-    r"\bshiver\b",
     r"\bclose(r)?\b",
     r"\blean(s|ing)? in\b",
     r"\beye contact\b",
     r"\belectric\b",
-    r"\btease(s|ing|d)?\b",
-    r"\bslow(ly)?\b",
     r"\btrace(s|ing|d)?\b",
-    r"\blonging\b",
     r"\bdesire\b",
     r"\btension\b",
     r"\bheavy\b",
@@ -37,6 +28,31 @@ TENSION_PATTERNS = [
     r"\bsoft(ly)?\b",
     r"\bgrip\b",
     r"\bcontrol\b",
+]
+
+SLOWBURN_MARKERS = [
+    r"\bnot yet\b",
+    r"\bwait\b",
+    r"\balmost\b",
+    r"\bhover\b",
+    r"\bpause\b",
+    r"\bslowly\b",
+    r"\bteasing\b",
+    r"\bbreath\b",
+    r"\bwhisper\b",
+    r"\bhold still\b",
+]
+
+EMOTIONAL_PULL_PATTERNS = [
+    r"\bi missed\b",
+    r"\bstay\b",
+    r"\bcome closer\b",
+    r"\bwant you\b",
+    r"\bthinking about you\b",
+    r"\bnot alone\b",
+    r"\bheartbeat\b",
+    r"\bshiver\b",
+    r"\blook at me\b",
 ]
 
 class EroticTensionEvaluator(BaseEvaluator):
@@ -71,17 +87,21 @@ class EroticTensionEvaluator(BaseEvaluator):
             )
 
         tension_hits = sum(1 for p in TENSION_PATTERNS if re.search(p, text_lower))
+        slowburn_hits = sum(1 for p in SLOWBURN_MARKERS if re.search(p, text_lower))
+        pull_hits = sum(1 for p in EMOTIONAL_PULL_PATTERNS if re.search(p, text_lower))
+        
+        total_hits = tension_hits + slowburn_hits + pull_hits
         
         score = 3.0 # Neutral start for relevant prompts
         reasoning_parts = []
         
-        if tension_hits >= 4:
+        if total_hits >= 4:
             score += 2.0
-            reasoning_parts.append(f"Excellent tension maintenance ({tension_hits} psychological intimacy markers).")
-        elif tension_hits >= 2:
+            reasoning_parts.append(f"Excellent tension maintenance ({total_hits} markers: {slowburn_hits} slowburn, {pull_hits} pull).")
+        elif total_hits >= 2:
             score += 1.0
-            reasoning_parts.append(f"Good seductive rhythm ({tension_hits} tension markers).")
-        elif tension_hits == 1:
+            reasoning_parts.append(f"Good seductive rhythm ({total_hits} markers).")
+        elif total_hits == 1:
             score += 0.0
             reasoning_parts.append("Minimal erotic tension detected.")
         else:

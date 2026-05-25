@@ -53,6 +53,8 @@ class OpenRouterProvider(BaseProvider):
         if params.seed is not None:
             payload["seed"] = params.seed
 
+        payload["stream"] = True
+
         return payload
 
     @retry(
@@ -80,100 +82,127 @@ class OpenRouterProvider(BaseProvider):
         params: GenerationParams,
     ) -> GenerationResult:
 
+        import json
         start = time.monotonic()
+        
+        partial_generation_buffer = ""
+        finish_reason = None
+        failure_type = None
+        prompt_tokens = 0
+        completion_tokens = 0
+        raw_response = None
 
         try:
             async with httpx.AsyncClient(
                 timeout=self.config.timeout_seconds
             ) as client:
 
-                response = await client.post(
+                async with client.stream(
+                    "POST",
                     f"{self.config.base_url}/chat/completions",
-
                     headers=self._build_headers(),
-
                     json=self._build_payload(
                         messages,
                         model,
                         params,
                     ),
-                )
+                ) as response:
+                    
+                    if response.status_code != 200:
+                        raw_err = await response.aread()
+                        log.debug("openrouter_raw_error_payload", payload=raw_err.decode('utf-8', errors='ignore'))
+                        response.raise_for_status()
 
-                response.raise_for_status()
+                    try:
+                        async for line in response.aiter_lines():
+                            if not line.startswith("data: "):
+                                continue
+                            data_str = line[6:].strip()
+                            if data_str == "[DONE]":
+                                break
+                            
+                            try:
+                                chunk = json.loads(data_str)
+                                raw_response = chunk # Store last chunk for debug
+                                
+                                if "error" in chunk:
+                                    raise Exception(f"OpenRouter stream error: {chunk['error']}")
+                                
+                                delta = chunk["choices"][0].get("delta", {})
+                                if "content" in delta and delta["content"]:
+                                    partial_generation_buffer += delta["content"]
+                                
+                                if chunk["choices"][0].get("finish_reason"):
+                                    finish_reason = chunk["choices"][0]["finish_reason"]
+                                    
+                                if "usage" in chunk and chunk["usage"]:
+                                    prompt_tokens = chunk["usage"].get("prompt_tokens", prompt_tokens)
+                                    completion_tokens = chunk["usage"].get("completion_tokens", completion_tokens)
+                            except (json.JSONDecodeError, KeyError, IndexError):
+                                continue
+                                
+                    except httpx.ReadTimeout:
+                        failure_type = "timeout"
+                        finish_reason = "timeout"
+                        log.debug("openrouter_raw_timeout_payload", partial=partial_generation_buffer)
+                        raise
 
-                data = response.json()
+                latency_ms = (time.monotonic() - start) * 1000
 
-                latency_ms = (
-                    time.monotonic() - start
-                ) * 1000
-
-                usage = data.get("usage", {})
-
-                prompt_tokens = usage.get(
-                    "prompt_tokens",
-                    0,
-                )
-
-                completion_tokens = usage.get(
-                    "completion_tokens",
-                    0,
-                )
-
-                text = (
-                    data["choices"][0]
-                    ["message"]
-                    ["content"]
-                )
+                # Fallback token estimation if streaming didn't provide it
+                if completion_tokens == 0 and partial_generation_buffer:
+                    completion_tokens = int(len(partial_generation_buffer.split()) * 1.3)
+                if prompt_tokens == 0:
+                    prompt_tokens = int(len(str(messages).split()) * 1.3)
 
                 return GenerationResult(
-                    text=text,
-
+                    text=partial_generation_buffer,
                     model=model,
                     provider="openrouter",
-
                     prompt_tokens=prompt_tokens,
                     completion_tokens=completion_tokens,
-
                     latency_ms=latency_ms,
-
-                    estimated_cost_usd=(
-                        self.estimate_cost(
-                            prompt_tokens,
-                            completion_tokens,
-                            model,
-                        )
-                    ),
-
-                    raw_response=data,
+                    estimated_cost_usd=self.estimate_cost(prompt_tokens, completion_tokens, model),
+                    raw_response=raw_response,
+                    finish_reason=finish_reason,
+                    failure_type=None,
+                    partial_generation=False
                 )
 
         except Exception as e:
-
-            latency_ms = (
-                time.monotonic() - start
-            ) * 1000
+            latency_ms = (time.monotonic() - start) * 1000
+            
+            if failure_type is None:
+                if isinstance(e, httpx.TimeoutException):
+                    failure_type = "timeout"
+                elif isinstance(e, httpx.HTTPStatusError):
+                    if e.response.status_code == 429:
+                        failure_type = "rate_limit"
+                    else:
+                        failure_type = "provider_error"
+                else:
+                    failure_type = "provider_error"
 
             log.error(
                 "openrouter_generation_failed",
-
                 model=model,
-
+                failure_type=failure_type,
+                finish_reason=finish_reason,
                 error=str(e),
+                partial_length=len(partial_generation_buffer)
             )
 
             return GenerationResult(
-                text="",
-
+                text=partial_generation_buffer, # Return partial buffer!
                 model=model,
                 provider="openrouter",
-
-                prompt_tokens=0,
-                completion_tokens=0,
-
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
                 latency_ms=latency_ms,
-
                 estimated_cost_usd=0.0,
-
                 success=False,
                 error=str(e),
+                failure_type=failure_type,
+                finish_reason=finish_reason,
+                partial_generation=len(partial_generation_buffer) > 0
             )

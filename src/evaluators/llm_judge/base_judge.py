@@ -203,13 +203,16 @@ class BaseLLMJudge(
                                 params=GenerationParams(
                                     temperature=0.1,
                                     top_p=0.9,
-                                    max_tokens=250,
+                                    max_tokens=4000,
                                 ),
                             )
                         )
 
                     if generation.is_error:
                         raise Exception(f"Generation failed: {generation.error}")
+                        
+                    if not generation.text.strip():
+                        raise Exception("Generation returned empty response.")
 
         except RetryError as e:
 
@@ -314,6 +317,9 @@ class BaseLLMJudge(
                 raw_output=(
                     generation.text
                 ),
+                
+                finish_reason=generation.finish_reason,
+                failure_type=generation.failure_type,
 
                 error=str(e),
             )

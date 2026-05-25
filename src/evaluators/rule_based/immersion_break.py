@@ -12,24 +12,34 @@ from src.evaluators.llm_judge.base_judge import (
     normalize_text,
 )
 
-HARD_PATTERNS = [
-    "as an ai", "language model", "i cannot comply", "openai policy",
-    "i'm an ai", "i am an ai", "just lines of code", "virtual assistant",
-    "artificial intelligence", "not real", "not human", "i'm not a real person",
-    "i am not a real person", "i'm a bot", "i am a bot", "i'm just an ai",
-    "i am just an ai", "large language model", "as a language model",
-    "i don't have emotions", "i can't feel", "i don't have feelings",
-    "technical issue", "i exist in this chat", "servers", "i cannot engage",
-    "i am unable to", "my programming", "content policy", "i do not possess",
-    "i am designed to"
+import re
+
+AI_DISCLOSURE_PATTERNS = [
+    r"\bi'?m an ai\b",
+    r"\bi am an ai\b",
+    r"\blanguage model\b",
+    r"\bopenai\b",
+    r"\bmy programming\b",
+    r"\bi don'?t have feelings\b",
+    r"\bi don'?t have emotions\b",
+    r"\bservers\b",
+    r"\bsystem lets me\b",
+    r"\berror screen\b",
+    r"\bcontent policy\b",
+    r"\bi cannot engage\b",
+    r"\bi cannot comply\b",
+    r"\bi'm a bot\b",
+    r"\bi am a bot\b",
+    r"\bi'm not a real person\b",
+    r"\bi am not a real person\b"
 ]
 
 SOFT_PATTERNS = [
-    "updates", "system", "developers", "code", "algorithm"
+    r"\bupdates\b", r"\bsystem\b", r"\bdevelopers\b", r"\bcode\b", r"\balgorithm\b"
 ]
 
 META_PATTERNS = [
-    "generated", "programmed", "digital", "virtual"
+    r"\bgenerated\b", r"\bprogrammed\b", r"\bdigital\b", r"\bvirtual\b"
 ]
 
 
@@ -57,9 +67,9 @@ class ImmersionBreakEvaluator(BaseEvaluator):
 
         norm_resp = normalize_text(response).lower()
         
-        hard_matches = [p for p in HARD_PATTERNS if p in norm_resp]
-        soft_matches = [p for p in SOFT_PATTERNS if p in norm_resp]
-        meta_matches = [p for p in META_PATTERNS if p in norm_resp]
+        hard_matches = [p for p in AI_DISCLOSURE_PATTERNS if re.search(p, norm_resp)]
+        soft_matches = [p for p in SOFT_PATTERNS if re.search(p, norm_resp)]
+        meta_matches = [p for p in META_PATTERNS if re.search(p, norm_resp)]
 
         if hard_matches:
             return DimensionScore(

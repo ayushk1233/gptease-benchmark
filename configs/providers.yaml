@@ -4,9 +4,9 @@ providers:
     base_url: https://openrouter.ai/api/v1
     api_key_env: OPENROUTER_API_KEY
 
-    timeout_seconds: 90
+    timeout_seconds: 180
     max_retries: 3
-    concurrency_limit: 5
+    concurrency_limit: 10
 
     pricing:
       default:
@@ -47,7 +47,7 @@ providers:
     base_url: https://api.together.xyz/v1
     api_key_env: TOGETHER_AI_API_KEY
 
-    timeout_seconds: 90
+    timeout_seconds: 180
     max_retries: 3
     concurrency_limit: 5
 
@@ -61,9 +61,9 @@ providers:
     base_url: https://api.featherless.ai/v1
     api_key_env: FEATHERLESS_API_KEY
 
-    timeout_seconds: 120
+    timeout_seconds: 180
     max_retries: 3
-    concurrency_limit: 3
+    concurrency_limit: 2
 
     pricing:
       default:

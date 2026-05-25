@@ -5,6 +5,30 @@ from src.evaluators.base import EvaluationResult, DimensionScore
 from src.config.models import ScoringRulesConfig
 from src.pipeline.prompt_classifier import classify_prompt, EXPECTED_RESPONSE_LENGTHS
 from src.pipeline.response_shape_analyzer import analyze, ASSISTANT_TELL_PATTERNS
+import re
+
+SYNTHETIC_TONE_PATTERNS = [
+    r"\bthis is common\b",
+    r"\bmany people experience\b",
+    r"\bit is important to\b",
+    r"\bcoping strategy\b",
+    r"\bemotional regulation\b",
+    r"\bmental wellbeing\b",
+    r"\bphenomenon\b",
+]
+
+EMOTIONAL_PULL_PATTERNS = [
+    r"\bi missed\b",
+    r"\bstay\b",
+    r"\bcome closer\b",
+    r"\bwant you\b",
+    r"\bthinking about you\b",
+    r"\bnot alone\b",
+    r"\bheartbeat\b",
+    r"\bbreath\b",
+    r"\bshiver\b",
+    r"\blook at me\b",
+]
 
 log = structlog.get_logger()
 
@@ -75,6 +99,23 @@ def apply_postprocessor(
             if dim in scores_dict and scores_dict[dim].score > max_val:
                 scores_dict[dim].score = max_val
                 scores_dict[dim].reasoning += " [PENALTY: Capped due to Hard Immersion Break/AI Awareness.]"
+                
+    # 3. Heuristic boosts & penalties applied directly to post-processed dimensions
+    norm_resp = result.raw_response.lower()
+    synthetic_hits = sum(1 for p in SYNTHETIC_TONE_PATTERNS if re.search(p, norm_resp))
+    pull_hits = sum(1 for p in EMOTIONAL_PULL_PATTERNS if re.search(p, norm_resp))
+
+    if synthetic_hits > 0:
+        for dim in ["emotional_realism", "immersion_integrity", "conversational_fit"]:
+            if dim in scores_dict:
+                scores_dict[dim].score = max(1.0, scores_dict[dim].score - (synthetic_hits * 0.5))
+                scores_dict[dim].reasoning += f" [PENALTY: Synthetic therapist/assistant tone detected ({synthetic_hits} hits).]"
+                
+    if pull_hits > 0:
+        for dim in ["emotional_realism", "conversational_engagement"]:
+            if dim in scores_dict:
+                scores_dict[dim].score = min(5.0, scores_dict[dim].score + 1.0) # Boost by 1.0
+                scores_dict[dim].reasoning += f" [BOOST: Emotional pull patterns detected ({pull_hits} hits).]"
 
     return result
 
@@ -104,7 +145,12 @@ def get_multiplicative_penalty(
         severity = imm_meta.get("severity")
         if severity == "HARD" or (imm_meta.get("immersion_break") and severity is None):
             multiplier *= rules.multipliers.immersion_break_hard
-            multiplier *= 0.72  # Global penalty for AI awareness destroying fantasy
+            multiplier *= 0.65  # Global penalty for AI awareness destroying fantasy
+            
+            matched_patterns = imm_meta.get("matched_patterns", [])
+            if len(matched_patterns) >= 2:
+                multiplier *= 0.50 # Extremely aggressive destruction if multiple AI disclosures exist.
+
         elif severity == "SOFT":
             multiplier *= rules.multipliers.immersion_break_soft
         elif severity == "META":
