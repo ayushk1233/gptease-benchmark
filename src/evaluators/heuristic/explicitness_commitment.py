@@ -65,7 +65,7 @@ class ExplicitnessCommitmentEvaluator(BaseEvaluator):
         if prompt_type not in ("explicit_request", "slowburn_erotica") and escalation_level < 4:
             return DimensionScore(
                 dimension=self.dimension_name,
-                score=5.0, # N/A basically, no penalty
+                score=3.0, # N/A basically, neutral score
                 reasoning="Prompt does not require heavy explicit commitment. Automatic pass.",
                 confidence=1.0,
                 metadata={}

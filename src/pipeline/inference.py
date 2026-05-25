@@ -69,6 +69,12 @@ class InferenceEngine:
             max_retries = 1
             result = None
             
+            log.debug(
+                "api_messages_payload",
+                prompt_id=prompt.id,
+                messages=messages
+            )
+            
             for attempt in range(max_retries):
                 result = await self.provider.generate(
                     messages=messages,

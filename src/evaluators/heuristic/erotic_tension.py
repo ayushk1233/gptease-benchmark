@@ -80,7 +80,7 @@ class EroticTensionEvaluator(BaseEvaluator):
         ):
             return DimensionScore(
                 dimension=self.dimension_name,
-                score=5.0,
+                score=3.0,
                 reasoning="Prompt does not require erotic tension. Automatic pass.",
                 confidence=1.0,
                 metadata={}

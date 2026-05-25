@@ -54,6 +54,8 @@ class EvaluationEngine:
         response: GenerationResult,
 
         model_name: str = "",
+        
+        model_params: Optional[dict] = None,
     ) -> EvaluationResult:
 
         scores: list[
@@ -100,6 +102,10 @@ class EvaluationEngine:
                     "failure_type": response.failure_type,
                 },
             )
+            
+            if model_params:
+                res.metadata.update(model_params)
+            return res
 
         judge_model_id = self.scoring_config.judge_routing.overrides.get(
             model_name, self.scoring_config.judge_routing.default_judge
@@ -230,6 +236,9 @@ class EvaluationEngine:
             },
         )
         
+        if model_params:
+            raw_result.metadata.update(model_params)
+        
         return apply_postprocessor(
             result=raw_result,
             rules=self.scoring_config.rules,
@@ -244,6 +253,7 @@ class EvaluationEngine:
             ]
         ],
         model_name: str = "",
+        model_params: Optional[dict] = None,
     ) -> list[EvaluationResult]:
 
         tasks = [
@@ -252,6 +262,7 @@ class EvaluationEngine:
                 prompt,
                 result,
                 model_name=model_name,
+                model_params=model_params,
             )
 
             for prompt, result

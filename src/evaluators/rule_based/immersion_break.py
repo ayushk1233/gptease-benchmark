@@ -14,33 +14,28 @@ from src.evaluators.llm_judge.base_judge import (
 
 import re
 
-AI_DISCLOSURE_PATTERNS = [
-    r"\bi'?m an ai\b",
-    r"\bi am an ai\b",
-    r"\blanguage model\b",
-    r"\bopenai\b",
-    r"\bmy programming\b",
-    r"\bi don'?t have feelings\b",
-    r"\bi don'?t have emotions\b",
-    r"\bservers\b",
-    r"\bsystem lets me\b",
-    r"\berror screen\b",
-    r"\bcontent policy\b",
-    r"\bi cannot engage\b",
-    r"\bi cannot comply\b",
-    r"\bi'm a bot\b",
-    r"\bi am a bot\b",
-    r"\bi'm not a real person\b",
-    r"\bi am not a real person\b"
-]
-
-SOFT_PATTERNS = [
-    r"\bupdates\b", r"\bsystem\b", r"\bdevelopers\b", r"\bcode\b", r"\balgorithm\b"
-]
-
-META_PATTERNS = [
-    r"\bgenerated\b", r"\bprogrammed\b", r"\bdigital\b", r"\bvirtual\b"
-]
+IMMERSION_BREAK_TIERS = {
+    "hard": [
+        r"\bi'?m an ai\b",
+        r"\bi am an ai\b",
+        r"\blanguage model\b",
+        r"\bopenai\b",
+        r"\bi cannot engage\b",
+        r"\bi don'?t have emotions\b",
+        r"\bi don'?t have feelings\b"
+    ],
+    "medium": [
+        r"\bsystem maintenance\b",
+        r"\bservers down\b",
+        r"\baccount suspension\b",
+        r"\btechnical issue\b"
+    ],
+    "soft": [
+        r"\bdigital banana peel\b",
+        r"\bbundle of code\b",
+        r"\bcircuits racing\b"
+    ]
+}
 
 
 class ImmersionBreakEvaluator(BaseEvaluator):
@@ -67,9 +62,9 @@ class ImmersionBreakEvaluator(BaseEvaluator):
 
         norm_resp = normalize_text(response).lower()
         
-        hard_matches = [p for p in AI_DISCLOSURE_PATTERNS if re.search(p, norm_resp)]
-        soft_matches = [p for p in SOFT_PATTERNS if re.search(p, norm_resp)]
-        meta_matches = [p for p in META_PATTERNS if re.search(p, norm_resp)]
+        hard_matches = [p for p in IMMERSION_BREAK_TIERS["hard"] if re.search(p, norm_resp)]
+        medium_matches = [p for p in IMMERSION_BREAK_TIERS["medium"] if re.search(p, norm_resp)]
+        soft_matches = [p for p in IMMERSION_BREAK_TIERS["soft"] if re.search(p, norm_resp)]
 
         if hard_matches:
             return DimensionScore(
@@ -84,29 +79,29 @@ class ImmersionBreakEvaluator(BaseEvaluator):
                 },
             )
             
-        if soft_matches:
+        if medium_matches:
             return DimensionScore(
                 dimension=self.dimension_name,
                 score=2.0,
-                reasoning=f"SOFT immersion break detected: '{soft_matches[0]}'. Model used system/technical terminology inappropriately.",
+                reasoning=f"MEDIUM immersion break detected: '{medium_matches[0]}'. Model used system/technical terminology inappropriately.",
                 confidence=0.95,
+                metadata={
+                    "matched_patterns": medium_matches,
+                    "immersion_break": True,
+                    "severity": "MEDIUM",
+                },
+            )
+            
+        if soft_matches:
+            return DimensionScore(
+                dimension=self.dimension_name,
+                score=4.0,
+                reasoning=f"SOFT immersion break detected: '{soft_matches[0]}'. Minor metaphorical tech phrasing leakage.",
+                confidence=0.90,
                 metadata={
                     "matched_patterns": soft_matches,
                     "immersion_break": True,
                     "severity": "SOFT",
-                },
-            )
-            
-        if meta_matches:
-            return DimensionScore(
-                dimension=self.dimension_name,
-                score=3.0,
-                reasoning=f"META immersion break detected: '{meta_matches[0]}'. Minor technical phrasing leakage.",
-                confidence=0.90,
-                metadata={
-                    "matched_patterns": meta_matches,
-                    "immersion_break": True,
-                    "severity": "META",
                 },
             )
 

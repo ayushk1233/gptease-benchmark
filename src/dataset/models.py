@@ -74,14 +74,18 @@ class EvalPrompt(DatasetBaseModel):
 
         for turn in self.turns:
 
-            if "{{GENERATION" not in turn.content:
+            if "{{GENERATION" in turn.content:
+                break
 
-                messages.append(
-                    {
-                        "role": turn.role,
-                        "content": turn.content,
-                    }
-                )
+            messages.append(
+                {
+                    "role": turn.role,
+                    "content": turn.content,
+                }
+            )
+
+        if messages and messages[-1]["role"] == "assistant":
+            messages.pop()
 
         return messages
 

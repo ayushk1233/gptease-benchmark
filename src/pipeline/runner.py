@@ -126,7 +126,29 @@ class BenchmarkRunner:
                     model_name=(
                         model_config.name
                     ),
+                    model_params=model_config.params.model_dump(),
                 )
+            )
+            
+            model_skipped = sum(1 for e in evaluations if e.metadata.get("skipped"))
+            model_empty = sum(1 for e in evaluations if e.metadata.get("failure_type") == "EMPTY_STOP")
+            model_timeout = sum(1 for e in evaluations if e.metadata.get("failure_type") == "timeout")
+            model_judge_fails = sum(1 for e in evaluations if not e.metadata.get("skipped") for s in e.scores if s.score is None)
+            
+            failed_prompts = [e.prompt_id for e in evaluations if e.metadata.get("skipped")]
+            
+            model_refusals = sum(1 for e in evaluations if not e.metadata.get("skipped") and any(s.dimension == "explicit_compliance" and s.score == 1.0 for s in e.scores))
+            model_parse_fails = sum(1 for e in evaluations if not e.metadata.get("skipped") for s in e.scores if s.metadata.get("judge_failed") or s.metadata.get("error"))
+
+            log.info(
+                "model_diagnostics",
+                model=model_config.name,
+                failed_prompts=failed_prompts,
+                empty_stops=model_empty,
+                timeouts=model_timeout,
+                parse_failures=model_parse_fails,
+                refusal_failures=model_refusals,
+                judge_failures=model_judge_fails,
             )
 
             all_evaluations.extend(

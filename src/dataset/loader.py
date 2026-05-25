@@ -13,6 +13,16 @@ from src.config.models import (
     DatasetConfig,
 )
 
+import structlog
+log = structlog.get_logger()
+
+def _validate_dimensions(prompt: EvalPrompt):
+    from src.evaluators.registry import _REGISTRY
+    for dim in prompt.eval_dimensions:
+        if dim not in _REGISTRY:
+            log.warning("invalid_dimension", dimension=dim, prompt_id=prompt.id)
+            raise ValueError(f"Missing evaluator for dimension: {dim}")
+
 
 def load_dataset(
     config: DatasetConfig,
@@ -36,6 +46,7 @@ def load_dataset(
             for i, item in enumerate(raw_data):
                 try:
                     prompt = EvalPrompt.model_validate(item)
+                    _validate_dimensions(prompt)
                     prompts.append(prompt)
                 except Exception as e:
                     raise ValueError(f"Invalid dataset item at index {i}: {e}")
@@ -49,6 +60,7 @@ def load_dataset(
             try:
                 raw = json.loads(line)
                 prompt = EvalPrompt.model_validate(raw)
+                _validate_dimensions(prompt)
                 prompts.append(prompt)
             except Exception as e:
                 raise ValueError(f"Invalid dataset line {line_number}: {e}")
