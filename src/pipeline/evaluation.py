@@ -94,6 +94,8 @@ class EvaluationEngine:
                     "generation_cost_usd": response.estimated_cost_usd,
                     "judge_cost_usd": 0.0,
                     "total_cost_usd": response.estimated_cost_usd,
+                    "retries": response.retries,
+                    "failure_type": response.failure_type,
                 },
             )
 
@@ -196,6 +198,9 @@ class EvaluationEngine:
                         for s in scores
                     )
                 ),
+                
+                "retries": response.retries,
+                "failure_type": response.failure_type,
             },
         )
         

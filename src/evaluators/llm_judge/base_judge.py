@@ -7,7 +7,7 @@ import structlog
 from abc import ABC
 from tenacity import AsyncRetrying, wait_exponential, stop_after_attempt, RetryError
 
-JUDGE_SEMAPHORE = asyncio.Semaphore(2)
+JUDGE_SEMAPHORE = asyncio.Semaphore(5)
 
 from abc import abstractmethod
 

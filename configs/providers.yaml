@@ -6,7 +6,7 @@ providers:
 
     timeout_seconds: 180
     max_retries: 3
-    concurrency_limit: 10
+    concurrency_limit: 5
 
     pricing:
       default:

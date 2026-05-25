@@ -148,6 +148,18 @@ class BenchmarkRunner:
             if not e.metadata.get("skipped")
             for s in e.scores if s.score is None
         )
+        
+        total_retries = sum(e.metadata.get("retries", 0) for e in all_evaluations)
+        total_latency = sum(e.metadata.get("latency_ms", 0) for e in all_evaluations)
+        average_generation_time_ms = total_latency / len(all_evaluations) if all_evaluations else 0
+        
+        provider_failures = sum(1 for e in all_evaluations if e.metadata.get("failure_type") in ["timeout", "provider_error", "rate_limit"])
+        provider_instability_rate = provider_failures / len(all_evaluations) if all_evaluations else 0
+        
+        from collections import Counter
+        failed_prompt_frequency = Counter(
+            e.prompt_id for e in all_evaluations if e.metadata.get("skipped")
+        )
 
         log.info(
             "benchmark_completed",
@@ -157,6 +169,10 @@ class BenchmarkRunner:
             failed_generations=skipped,
             skipped_evaluations=skipped,
             judge_failures=judge_fails,
+            total_retries=total_retries,
+            average_generation_time_ms=round(average_generation_time_ms, 2),
+            provider_instability_rate=round(provider_instability_rate, 4),
+            failed_prompt_frequency=dict(failed_prompt_frequency),
         )
 
         return {

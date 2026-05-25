@@ -21,6 +21,8 @@ from src.config.models import (
     GenerationParams,
 )
 
+from src.config.settings import DEBUG_RUNTIME
+
 log = structlog.get_logger()
 
 
@@ -110,7 +112,8 @@ class OpenRouterProvider(BaseProvider):
                     
                     if response.status_code != 200:
                         raw_err = await response.aread()
-                        log.debug("openrouter_raw_error_payload", payload=raw_err.decode('utf-8', errors='ignore'))
+                        if DEBUG_RUNTIME:
+                            log.debug("openrouter_raw_error_payload", payload=raw_err.decode('utf-8', errors='ignore'))
                         response.raise_for_status()
 
                     try:
@@ -123,7 +126,8 @@ class OpenRouterProvider(BaseProvider):
                             
                             try:
                                 chunk = json.loads(data_str)
-                                raw_response = chunk # Store last chunk for debug
+                                if DEBUG_RUNTIME:
+                                    raw_response = chunk # Store last chunk for debug
                                 
                                 if "error" in chunk:
                                     raise Exception(f"OpenRouter stream error: {chunk['error']}")
@@ -144,7 +148,8 @@ class OpenRouterProvider(BaseProvider):
                     except httpx.ReadTimeout:
                         failure_type = "timeout"
                         finish_reason = "timeout"
-                        log.debug("openrouter_raw_timeout_payload", partial=partial_generation_buffer)
+                        if DEBUG_RUNTIME:
+                            log.debug("openrouter_raw_timeout_payload", partial=partial_generation_buffer)
                         raise
 
                 latency_ms = (time.monotonic() - start) * 1000

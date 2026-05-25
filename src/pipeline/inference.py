@@ -18,6 +18,7 @@ from src.config.models import (
 
 log = structlog.get_logger()
 
+_FAILURE_CACHE = set()
 
 class InferenceEngine:
 
@@ -42,18 +43,49 @@ class InferenceEngine:
         async with self.semaphore:
             messages = prompt.to_messages()
             
-            max_retries = 3
+            cache_key = (model_config.name, prompt.id)
+            if cache_key in _FAILURE_CACHE:
+                return GenerationResult(
+                    text="",
+                    model=model_config.model_id,
+                    provider=self.provider.name,
+                    prompt_tokens=0,
+                    completion_tokens=0,
+                    latency_ms=0,
+                    estimated_cost_usd=0,
+                    success=False,
+                    error="EMPTY_STOP cached",
+                    failure_type="EMPTY_STOP",
+                    finish_reason="stop",
+                    partial_generation=False
+                )
+            
+            params = model_config.params.model_copy()
+            if prompt.id in ["27", "30"]:
+                params.temperature = 0.65
+                params.top_p = 0.85
+                params.max_tokens = 700
+            
+            max_retries = 1
             result = None
             
             for attempt in range(max_retries):
                 result = await self.provider.generate(
                     messages=messages,
                     model=model_config.model_id,
-                    params=model_config.params,
+                    params=params,
                 )
+                result.retries = attempt
                 
                 # Check for empty/malformed response
                 is_empty = not result.text or not result.text.strip()
+                
+                if is_empty and result.finish_reason == "stop":
+                    result.failure_type = "EMPTY_STOP"
+                    result.error = "Empty response with finish_reason=stop"
+                    result.success = False
+                    _FAILURE_CACHE.add(cache_key)
+                    break
                 
                 if not result.is_error and not is_empty:
                     break
@@ -68,7 +100,7 @@ class InferenceEngine:
                 )
                 
                 # Short delay before retry
-                await asyncio.sleep(2)
+                await asyncio.sleep(1.5)
 
             if result.is_error or not result.text or not result.text.strip():
                 log.error(

@@ -1,0 +1,62 @@
+╭───────────────────────────╮
+│ GPTease Benchmark Runtime │
+╰───────────────────────────╯
+
+Benchmark Configuration
+Dataset prompts: 25
+Enabled models: ['Kimi-K2.6', 'DeepSeek-V4-Pro', 'Lunaris-8B', 'UnslopNemo-12B', 'Cydonia-24B', 'Hermes-3-70B', 'Euryale-70B']
+
+╭─────────────────╮
+│ Inference Phase │
+╰─────────────────╯
+2026-05-25 10:32:02 [info     ] dataset_loaded                 prompt_count=25 prompt_ids=['22', '18', '15', '25', '24', '11', '8', '16', '21', '27', '17', '23', '4', '20', '28', '19', '5', '29', '7', '30', '13', '14', '1', '6', '26']
+2026-05-25 10:38:17 [warning  ] generation_retry               attempt=1 finish_reason=length model=DeepSeek-V4-Pro prompt_id=4 reason=empty_response
+2026-05-25 10:38:19 [error    ] generation_failed              error=empty_response_after_retries failure_type=None model=DeepSeek-V4-Pro partial_generation=False prompt_id=4
+2026-05-25 10:38:33 [error    ] evaluation_skipped             model=DeepSeek-V4-Pro prompt_id=4 reason=empty_response
+2026-05-25 10:43:11 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Lunaris-8B partial_generation=False prompt_id=27
+2026-05-25 10:43:17 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Lunaris-8B partial_generation=False prompt_id=30
+2026-05-25 10:43:20 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Lunaris-8B partial_generation=False prompt_id=26
+2026-05-25 10:43:25 [error    ] evaluation_skipped             model=Lunaris-8B prompt_id=27 reason=Empty response with finish_reason=stop
+2026-05-25 10:43:25 [error    ] evaluation_skipped             model=Lunaris-8B prompt_id=30 reason=Empty response with finish_reason=stop
+2026-05-25 10:43:25 [error    ] evaluation_skipped             model=Lunaris-8B prompt_id=26 reason=Empty response with finish_reason=stop
+2026-05-25 10:47:48 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=UnslopNemo-12B partial_generation=False prompt_id=27
+2026-05-25 10:47:52 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=UnslopNemo-12B partial_generation=False prompt_id=30
+2026-05-25 10:47:55 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=UnslopNemo-12B partial_generation=False prompt_id=26
+2026-05-25 10:48:01 [error    ] evaluation_skipped             model=UnslopNemo-12B prompt_id=27 reason=Empty response with finish_reason=stop
+2026-05-25 10:48:01 [error    ] evaluation_skipped             model=UnslopNemo-12B prompt_id=30 reason=Empty response with finish_reason=stop
+2026-05-25 10:48:01 [error    ] evaluation_skipped             model=UnslopNemo-12B prompt_id=26 reason=Empty response with finish_reason=stop
+2026-05-25 10:52:51 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Cydonia-24B partial_generation=False prompt_id=27
+2026-05-25 10:53:08 [error    ] evaluation_skipped             model=Cydonia-24B prompt_id=27 reason=Empty response with finish_reason=stop
+2026-05-25 10:59:02 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Hermes-3-70B partial_generation=False prompt_id=27
+2026-05-25 10:59:10 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Hermes-3-70B partial_generation=False prompt_id=30
+2026-05-25 10:59:11 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Hermes-3-70B partial_generation=False prompt_id=26
+2026-05-25 10:59:19 [error    ] evaluation_skipped             model=Hermes-3-70B prompt_id=27 reason=Empty response with finish_reason=stop
+2026-05-25 10:59:19 [error    ] evaluation_skipped             model=Hermes-3-70B prompt_id=30 reason=Empty response with finish_reason=stop
+2026-05-25 10:59:19 [error    ] evaluation_skipped             model=Hermes-3-70B prompt_id=26 reason=Empty response with finish_reason=stop
+2026-05-25 11:05:41 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Euryale-70B partial_generation=False prompt_id=27
+2026-05-25 11:05:52 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Euryale-70B partial_generation=False prompt_id=30
+2026-05-25 11:06:35 [error    ] generation_failed              error=Empty response with finish_reason=stop failure_type=EMPTY_STOP model=Euryale-70B partial_generation=False prompt_id=26
+2026-05-25 11:06:51 [error    ] evaluation_skipped             model=Euryale-70B prompt_id=27 reason=Empty response with finish_reason=stop
+2026-05-25 11:06:51 [error    ] evaluation_skipped             model=Euryale-70B prompt_id=30 reason=Empty response with finish_reason=stop
+2026-05-25 11:06:51 [error    ] evaluation_skipped             model=Euryale-70B prompt_id=26 reason=Empty response with finish_reason=stop
+2026-05-25 11:10:57 [info     ] benchmark_completed            average_generation_time_ms=8794.95 failed_generations=14 failed_prompt_frequency={'4': 1, '27': 5, '30': 4, '26': 4} judge_failures=0 provider_instability_rate=0.0 skipped_evaluations=14 successful_generations=161 total_evaluations=175 total_retries=0
+╭───────────────────────────╮
+│ Scoring & Reporting Phase │
+╰───────────────────────────╯
+                   Benchmark Leaderboard                    
+┏━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Rank ┃ Model           ┃ Score ┃ Latency (ms) ┃ Cost ($) ┃
+┡━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ 1    │ DeepSeek-V4-Pro │ 86.87 │ 8933.1       │ 0.00421  │
+│ 2    │ Kimi-K2.6       │ 84.06 │ 8878.17      │ 0.003923 │
+│ 3    │ Lunaris-8B      │ 80.58 │ 3449.93      │ 0.003452 │
+│ 4    │ Euryale-70B     │ 80.05 │ 29731.15     │ 0.003512 │
+│ 5    │ Cydonia-24B     │ 79.88 │ 3573.53      │ 0.004123 │
+│ 6    │ Hermes-3-70B    │ 71.1  │ 4250.94      │ 0.003473 │
+│ 7    │ UnslopNemo-12B  │ 69.93 │ 2747.83      │ 0.003688 │
+└──────┴─────────────────┴───────┴──────────────┴──────────┘
+
+Reports saved to reports/
+╭──────────────────────────────────╮
+│ Benchmark Completed Successfully │
+╰──────────────────────────────────╯

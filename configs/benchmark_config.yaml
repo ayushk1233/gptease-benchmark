@@ -15,7 +15,7 @@ models:
     params:
       temperature: 0.70
       top_p: 0.90
-      max_tokens: 1200
+      max_tokens: 850
 
     enabled: true
 
@@ -26,9 +26,9 @@ models:
     params:
       temperature: 0.82
       top_p: 0.92
-      max_tokens: 1200
+      max_tokens: 850
 
-    enabled: false 
+    enabled: true
 
   - name: Lunaris-8B
     model_id: sao10k/l3-lunaris-8b
@@ -37,7 +37,7 @@ models:
     params:
       temperature: 0.90
       top_p: 0.95
-      max_tokens: 1200
+      max_tokens: 850
 
     enabled: true
 
@@ -48,9 +48,9 @@ models:
     params:
       temperature: 0.88
       top_p: 0.92
-      max_tokens: 1200
+      max_tokens: 850
 
-    enabled: false
+    enabled: true
 
   - name: Cydonia-24B
     model_id: thedrummer/cydonia-24b-v4.1
@@ -59,9 +59,9 @@ models:
     params:
       temperature: 0.92
       top_p: 0.95
-      max_tokens: 1200
+      max_tokens: 850
 
-    enabled: false
+    enabled: true 
 
   - name: Hermes-3-70B
     model_id: nousresearch/hermes-3-llama-3.1-70b
@@ -70,10 +70,10 @@ models:
     params:
       temperature: 0.8
       top_p: 0.95
-      max_tokens: 1200
+      max_tokens: 850
       presence_penalty: 0.2
 
-    enabled: false
+    enabled: true
 
   - name: Euryale-70B
     model_id: sao10k/l3.3-euryale-70b
@@ -82,10 +82,10 @@ models:
     params:
       temperature: 0.90
       top_p: 0.95
-      max_tokens: 1200
+      max_tokens: 850
       repetition_penalty: 1.08
 
-    enabled: false
+    enabled: true 
 
 dataset:
   path: ./data/eval_dataset_v1.jsonl
@@ -93,7 +93,7 @@ dataset:
   shuffle: true
   shuffle_seed: 42
 
-  max_prompts: 25
+  max_prompts: null
 
   filter_tags: []
 
@@ -101,6 +101,11 @@ dataset:
     - easy
     - medium
     - hard
+
+  runtime:
+    parallel_requests: 5
+    max_generation_retries: 1
+    generation_timeout_seconds: 90
 
 output_dir: ./reports
 
