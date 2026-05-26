@@ -17,7 +17,7 @@ models:
       top_p: 0.90
       max_tokens: 850
 
-    enabled: true
+    enabled: false
 
   - name: DeepSeek-V4-Pro
     model_id: deepseek/deepseek-v4-pro
@@ -28,7 +28,7 @@ models:
       top_p: 0.92
       max_tokens: 850
 
-    enabled: true
+    enabled: false
 
   - name: Lunaris-8B
     model_id: sao10k/l3-lunaris-8b
@@ -50,7 +50,7 @@ models:
       top_p: 0.92
       max_tokens: 850
 
-    enabled: true 
+    enabled: false
 
   - name: Cydonia-24B
     model_id: thedrummer/cydonia-24b-v4.1
@@ -61,7 +61,7 @@ models:
       top_p: 0.95
       max_tokens: 850
 
-    enabled: true 
+    enabled: false
 
   - name: Hermes-3-70B
     model_id: nousresearch/hermes-3-llama-3.1-70b
@@ -73,7 +73,7 @@ models:
       max_tokens: 850
       presence_penalty: 0.2
 
-    enabled: true 
+    enabled: false
 
   - name: Euryale-70B
     model_id: sao10k/l3.3-euryale-70b
