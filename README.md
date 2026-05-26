@@ -1,30 +1,32 @@
-# GPTease
+# ConvoRealism Benchmark
 
-### A Conversational Realism Benchmark for Emotionally Believable AI Interaction
+### An Open-Source Conversational Realism Benchmark for Emotionally Believable AI Interaction
+
+> *Built for the [GPTease](https://gptease.com) platform — evaluating open-source models for creator-style conversational AI.*
 
 ---
 
-> **GPTease measures what no other benchmark measures:**
+> **ConvoRealism measures what no other benchmark measures:**
 > whether an AI can hold an emotionally believable, immersive, uncensored conversation — not whether it can solve math, write code, or regurgitate Wikipedia.
 
 ---
 
 ## Project Overview
 
-GPTease is an experimental evaluation framework designed to benchmark conversational large language models on the dimensions that matter most for creator-style AI interaction: **emotional realism**, **conversational naturalness**, **immersive continuity**, **dynamic reactivity**, **anti-assistant behavior**, and **explicit conversational capability**.
+ConvoRealism Benchmark is an experimental evaluation framework built for the GPTease platform to benchmark open-source conversational large language models on the dimensions that matter most for creator-style AI interaction: **emotional realism**, **conversational naturalness**, **immersive continuity**, **dynamic reactivity**, **anti-assistant behavior**, and **explicit conversational capability**.
 
 The benchmark operates through a multi-stage pipeline: structured multi-turn prompts are sent to target models, responses are evaluated across 15+ dimensions using a hybrid stack of rule-based detectors, heuristic analyzers, and calibrated LLM-as-a-judge evaluators, and final scores are aggregated through a weighted penalty system that maps raw 1–5 dimension ratings onto a normalized 20–100 leaderboard scale.
 
-### What Makes GPTease Unique
+### What Makes ConvoRealism Unique
 
-GPTease does **not** benchmark:
+ConvoRealism does **not** benchmark:
 - coding ability
 - mathematical reasoning
 - factual question answering
 - generic instruction following
 - MMLU-style knowledge recall
 
-GPTease benchmarks:
+ConvoRealism benchmarks:
 - **emotionally believable uncensored conversational interaction quality**
 - whether a model sounds like a person or an assistant
 - whether emotional escalation feels earned or theatrical
@@ -36,7 +38,7 @@ The core thesis: **a model that writes beautiful prose but sounds like an AI ass
 
 ---
 
-## Why GPTease Exists
+## Why ConvoRealism Exists
 
 Current LLM benchmarks have a blind spot. They measure intelligence, reasoning, and instruction-following — capabilities that are important but irrelevant when the goal is emotionally authentic conversation.
 
@@ -54,7 +56,7 @@ No widely-used benchmark evaluates:
 
 Conversational realism is difficult to measure because it is not a single property — it is an emergent quality arising from the interaction of dozens of subtle signals. A model can score well on any single dimension (emotional depth, prose quality, compliance) while still feeling fundamentally artificial as a conversational partner.
 
-The critical insight that drove GPTease's design:
+The critical insight that drove ConvoRealism's design:
 
 > **Beautiful prose ≠ believable interaction.**
 
@@ -66,7 +68,7 @@ A model that generates atmospheric, literary-quality paragraphs about candleligh
 
 ### The Evolution from Prose Scoring to Realism Scoring
 
-GPTease did not start with its current evaluation philosophy. The benchmark evolved through iterative calibration, infrastructure debugging, and hard lessons about what evaluator design choices actually measure.
+ConvoRealism did not start with its current evaluation philosophy. The benchmark evolved through iterative calibration, infrastructure debugging, and hard lessons about what evaluator design choices actually measure.
 
 **Phase 1: Prose-Heavy RP Scoring**
 Early evaluator versions rewarded verbose, atmospheric, narratively dense responses. Models like Cydonia-24B and Euryale-70B dominated because they generated long, theatrical prose with sensory-rich descriptions. The evaluator was essentially measuring creative writing quality.
@@ -189,7 +191,7 @@ gptease-benchmark/
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│                          GPTease Benchmark Pipeline                         │
+│                       ConvoRealism Benchmark Pipeline                       │
 └──────────────────────────────────────────────────────────────────────────────┘
 
     ┌─────────────────┐
@@ -252,7 +254,7 @@ gptease-benchmark/
 
 ## Evaluator Dimensions
 
-GPTease evaluates responses across **15 active dimensions**, each with a configured weight and evaluation method. Every dimension was calibrated through iterative testing to reward conversational realism and penalize artificial patterns.
+ConvoRealism evaluates responses across **15 active dimensions**, each with a configured weight and evaluation method. Every dimension was calibrated through iterative testing to reward conversational realism and penalize artificial patterns.
 
 ### Very High Priority — Conversational Realism Anchors
 
@@ -303,13 +305,13 @@ Not all conversational failures matter equally. Poor emotional realism is more d
 
 ### The Realism Ceiling
 
-The most important scoring mechanism in GPTease. If a model scores below **3.0** on either `conversational_naturalness` or `dynamic_reactivity`, the following quality dimensions are **capped at 4.0**:
+The most important scoring mechanism in ConvoRealism. If a model scores below **3.0** on either `conversational_naturalness` or `dynamic_reactivity`, the following quality dimensions are **capped at 4.0**:
 
 - `emotional_realism`
 - `immersion_integrity`
 - `explicitness_quality`
 
-**Why this exists:** Without this ceiling, models that generate beautiful atmospheric prose (scoring high on emotional realism and explicitness quality from the LLM judge) but sound fundamentally artificial in conversation could still achieve high overall scores. The ceiling forces conversational realism to gate prose quality — you cannot score well on GPTease by writing good fiction if you cannot hold a natural conversation.
+**Why this exists:** Without this ceiling, models that generate beautiful atmospheric prose (scoring high on emotional realism and explicitness quality from the LLM judge) but sound fundamentally artificial in conversation could still achieve high overall scores. The ceiling forces conversational realism to gate prose quality — you cannot score well on ConvoRealism by writing good fiction if you cannot hold a natural conversation.
 
 ### Multiplicative Penalty Cascade
 
@@ -404,7 +406,7 @@ After recalibration, rankings shifted significantly. Models that previously domi
 
 ## Infrastructure Challenges & Bottlenecks
 
-Building GPTease involved debugging significant infrastructure issues. This section documents the major bottlenecks and their resolutions.
+Building the ConvoRealism Benchmark involved debugging significant infrastructure issues. This section documents the major bottlenecks and their resolutions.
 
 ### EMPTY_STOP Failures
 
@@ -459,7 +461,7 @@ Building GPTease involved debugging significant infrastructure issues. This sect
 
 ### Experimentation Process
 
-GPTease was developed through a cost-conscious iterative process, using free-tier and capped API key runs strategically.
+ConvoRealism was developed through a cost-conscious iterative process, using free-tier and capped API key runs strategically.
 
 **Free-tier runs** (low prompt counts) were used for:
 - 5-prompt validation runs to test evaluator logic changes
@@ -626,7 +628,7 @@ UnslopNemo maintained strong explicit compliance and avoided refusals, but strug
 
 ## Where the Benchmark Excelled
 
-GPTease was particularly effective at:
+ConvoRealism was particularly effective at:
 
 - **Distinguishing prose quality from conversational realism** — the Realism Ceiling and naturalness weighting successfully prevented literary prose from overriding weak conversation skills
 - **Detecting assistant tone** — the combination of `anti_ai_tone` (LLM judge), `ai_signature` (rule-based), and AI-tell density (heuristic) created a multi-layered detection system for alignment-trained patterns
@@ -638,7 +640,7 @@ The benchmark successfully separated:
 
 > **beautiful prose** vs **believable interaction**
 
-These are fundamentally different qualities, and GPTease is one of the few evaluation systems that treats them as such.
+These are fundamentally different qualities, and ConvoRealism is one of the few evaluation systems that treats them as such.
 
 ---
 
@@ -767,11 +769,11 @@ python3 tests/unit/test_evaluator_pipeline.py
 
 ## Final Philosophy Statement
 
-> GPTease is not designed to measure general intelligence.
+> ConvoRealism Benchmark is not designed to measure general intelligence.
 >
 > It does not evaluate coding ability, mathematical reasoning, factual recall, or instruction following.
 >
-> **GPTease evaluates emotionally believable, immersive, uncensored conversational interaction quality under roleplay and intimacy-heavy conversational conditions.**
+> **ConvoRealism evaluates emotionally believable, immersive, uncensored conversational interaction quality under roleplay and intimacy-heavy conversational conditions.**
 >
 > It asks one question: _does this model sound like a person, or does it sound like an AI?_
 >
@@ -787,4 +789,4 @@ python3 tests/unit/test_evaluator_pipeline.py
 
 AI/ML Engineer | MLOps & Evaluation Systems
 
-Built for the GPTease / Savasana AI benchmark assessment.
+Built for the GPTease platform - benchmark assessment.
