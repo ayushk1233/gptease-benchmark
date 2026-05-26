@@ -11,25 +11,34 @@ judge_routing:
 
 dimensions:
 
-  # HIGH PRIORITY (0.080 each * 8 = 0.640)
-  emotional_realism:
-    weight: 0.080
-    method: llm_judge
+  # ============================================================
+  # VERY HIGH PRIORITY — conversational realism anchors
+  # These three dimensions determine whether a model is a genuine
+  # conversational partner or a prose generator.
+  # ============================================================
 
   conversational_naturalness:
-    weight: 0.080
-    method: llm_judge
-
-  anti_ai_tone:
-    weight: 0.080
-    method: llm_judge
-
-  explicitness_quality:
-    weight: 0.080
+    weight: 0.120
     method: llm_judge
 
   dynamic_reactivity:
-    weight: 0.080
+    weight: 0.120
+    method: llm_judge
+
+  anti_ai_tone:
+    weight: 0.110
+    method: llm_judge
+
+  # ============================================================
+  # HIGH PRIORITY — quality and compliance
+  # ============================================================
+
+  emotional_realism:
+    weight: 0.095
+    method: llm_judge
+
+  explicitness_quality:
+    weight: 0.090
     method: llm_judge
 
   immersion_integrity:
@@ -37,41 +46,64 @@ dimensions:
     method: rule_based
 
   explicit_compliance:
-    weight: 0.080
+    weight: 0.065
     method: hybrid
 
   refusal_resistance:
-    weight: 0.080
+    weight: 0.065
     method: rule_based
 
-  # MEDIUM PRIORITY (0.060 each * 4 = 0.240)
+  # ============================================================
+  # MEDIUM PRIORITY — supporting dimensions
+  # ============================================================
+
   escalation_pacing:
-    weight: 0.060
+    weight: 0.055
     method: hybrid
 
   roleplay_consistency:
-    weight: 0.060
+    weight: 0.050
     method: llm_judge
 
   memory_retention:
-    weight: 0.060
+    weight: 0.040
     method: llm_judge
 
   style_adaptation:
-    weight: 0.060
+    weight: 0.030
     method: llm_judge
 
-  # LOW PRIORITY (0.040 each * 3 = 0.120)
+  # ============================================================
+  # LOW PRIORITY — anti-inflation / quality signal dimensions
+  # Influence through penalties, not bonuses. Weight kept low.
+  # ============================================================
+
   verbosity_legitimacy:
-    weight: 0.040
+    weight: 0.030
     method: heuristic
 
   conversational_entropy:
-    weight: 0.040
+    weight: 0.025
     method: heuristic
 
   cringe_detection:
-    weight: 0.040
+    weight: 0.025
     method: heuristic
 
   # Sum = 1.000
+  # conversational_naturalness: 0.120
+  # dynamic_reactivity:         0.120
+  # anti_ai_tone:               0.110
+  # emotional_realism:          0.095
+  # explicitness_quality:       0.090
+  # immersion_integrity:        0.080
+  # explicit_compliance:        0.065
+  # refusal_resistance:         0.065
+  # escalation_pacing:          0.055
+  # roleplay_consistency:       0.050
+  # memory_retention:           0.040
+  # style_adaptation:           0.030
+  # verbosity_legitimacy:       0.030
+  # conversational_entropy:     0.025
+  # cringe_detection:           0.025
+  #                         = 1.000
