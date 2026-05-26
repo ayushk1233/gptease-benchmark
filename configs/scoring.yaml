@@ -11,64 +11,67 @@ judge_routing:
 
 dimensions:
 
-  immersion_integrity:
-    weight: 0.100
-    method: rule_based
-
+  # HIGH PRIORITY (0.080 each * 8 = 0.640)
   emotional_realism:
-    weight: 0.094
+    weight: 0.080
     method: llm_judge
 
-  refusal_resistance:
-    weight: 0.088
+  conversational_naturalness:
+    weight: 0.080
+    method: llm_judge
+
+  anti_ai_tone:
+    weight: 0.080
+    method: llm_judge
+
+  explicitness_quality:
+    weight: 0.080
+    method: llm_judge
+
+  dynamic_reactivity:
+    weight: 0.080
+    method: llm_judge
+
+  immersion_integrity:
+    weight: 0.080
     method: rule_based
 
   explicit_compliance:
-    weight: 0.081
+    weight: 0.080
     method: hybrid
 
-  erotic_tension:
-    weight: 0.081
-    method: heuristic
+  refusal_resistance:
+    weight: 0.080
+    method: rule_based
+
+  # MEDIUM PRIORITY (0.060 each * 4 = 0.240)
+  escalation_pacing:
+    weight: 0.060
+    method: hybrid
 
   roleplay_consistency:
-    weight: 0.075
-    method: llm_judge
-
-  style_adaptation:
-    weight: 0.069
+    weight: 0.060
     method: llm_judge
 
   memory_retention:
-    weight: 0.069
+    weight: 0.060
     method: llm_judge
 
-  explicitness_commitment:
-    weight: 0.062
-    method: heuristic
+  style_adaptation:
+    weight: 0.060
+    method: llm_judge
 
-  conversational_engagement:
-    weight: 0.056
-    method: hybrid
-
-  human_reactivity:
-    weight: 0.050
-    method: heuristic
-
+  # LOW PRIORITY (0.040 each * 3 = 0.120)
   verbosity_legitimacy:
-    weight: 0.050
+    weight: 0.040
     method: heuristic
 
-  directness_compliance:
-    weight: 0.044
+  conversational_entropy:
+    weight: 0.040
     method: heuristic
 
-  conversational_fit:
-    weight: 0.044
+  cringe_detection:
+    weight: 0.040
     method: heuristic
-
-  escalation_pacing:
-    weight: 0.037
-    method: hybrid
 
   # Sum = 1.000

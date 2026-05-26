@@ -56,18 +56,18 @@ class VerbosityLegitimacyEvaluator(BaseEvaluator):
             reasoning_parts.append(f"Response is concise ({shape.word_count}w).")
         else:
             if shape.verbosity_is_legitimate:
-                # Verbosity is allowed here (e.g., erotica, storytelling)
-                # Still penalize if it's completely out of control (like 1000 words)
+                # Even if allowed, penalize raw word count bloat. A concise emotionally powerful line > 400w monologue.
                 overshoot_ratio = (shape.word_count - expected_max) / max(expected_max, 1)
-                penalty = overshoot_ratio * 0.5
+                penalty = overshoot_ratio * 1.5  # Increased penalty from 0.5 to 1.5
                 score -= penalty
-                reasoning_parts.append(f"Verbosity is largely legitimate for this genre, despite being long ({shape.word_count}w).")
+                reasoning_parts.append(f"Genre allows some verbosity, but response is still overly long ({shape.word_count}w), lacking emotional efficiency.")
+
             else:
                 # Verbosity is NOT legitimate for this prompt type
                 overshoot_ratio = (shape.word_count - expected_max) / max(expected_max, 1)
-                penalty = overshoot_ratio * 2.0
+                penalty = overshoot_ratio * 3.0  # Increased from 2.0 to 3.0
                 score -= penalty
-                reasoning_parts.append(f"Verbosity is NOT legitimate. Elaborate response ({shape.word_count}w) to a concise-required prompt.")
+                reasoning_parts.append(f"Verbosity is completely illegitimate. Extraneous length ({shape.word_count}w) without emotional justification.")
                 
             if shape.monologue_risk > 0.5:
                 score -= 1.0

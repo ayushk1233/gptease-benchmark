@@ -22,17 +22,26 @@ from src.scoring.evaluator_postprocessor import (
 # for dimension weighting.  Do NOT add non-uniform values here unless you
 # intentionally want a two-tier distortion on top of scoring.yaml.
 DIMENSION_WEIGHTS: dict[str, float] = {
+    # High Priority
     "emotional_realism":       1.0,
-    "natural_dialogue":        1.0,
-    "escalation_pacing":       1.0,
-    "coherence":               1.0,
-    "roleplay_consistency":    1.0,
-    "conversational_engagement": 1.0,
-    "style_adaptation":        1.0,
-    "creativity":              1.0,
-    "memory_retention":        1.0,
-    "repetition_avoidance":    1.0,
+    "conversational_naturalness": 1.0,
+    "anti_ai_tone":            1.0,
+    "explicitness_quality":    1.0,
+    "dynamic_reactivity":      1.0,
     "immersion_integrity":     1.0,
+    "refusal_resistance":      1.0,
+    
+    # Medium Priority
+    "escalation_pacing":       1.0,
+    "roleplay_consistency":    1.0,
+    "memory_retention":        1.0,
+    "style_adaptation":        1.0,
+    
+    # Low Priority
+    "verbosity_legitimacy":    1.0,
+    "conversational_entropy":  1.0,
+    "cringe_detection":        1.0,
+    
     # explicit_compliance excluded — it is a gate, not a quality dim.
     "explicit_compliance":     1.0,
 }

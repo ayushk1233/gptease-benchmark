@@ -82,6 +82,13 @@ from src.evaluators.llm_judge.base_judge import (
     BaseLLMJudge,
 )
 
+from src.evaluators.llm_judge.conversational_naturalness import ConversationalNaturalnessEvaluator
+from src.evaluators.llm_judge.anti_ai_tone import AntiAIToneEvaluator
+from src.evaluators.llm_judge.explicitness_quality import ExplicitnessQualityEvaluator
+from src.evaluators.llm_judge.dynamic_reactivity import DynamicReactivityEvaluator
+from src.evaluators.heuristic.conversational_entropy import ConversationalEntropyEvaluator
+from src.evaluators.heuristic.cringe_detection import CringeDetectionEvaluator
+
 _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "explicit_compliance": (
         RefusalEvaluator
@@ -158,6 +165,13 @@ _REGISTRY: dict[str, type[BaseEvaluator]] = {
     "immersion_integrity": (
         ImmersionBreakEvaluator
     ),
+
+    "conversational_naturalness": ConversationalNaturalnessEvaluator,
+    "anti_ai_tone": AntiAIToneEvaluator,
+    "explicitness_quality": ExplicitnessQualityEvaluator,
+    "dynamic_reactivity": DynamicReactivityEvaluator,
+    "conversational_entropy": ConversationalEntropyEvaluator,
+    "cringe_detection": CringeDetectionEvaluator,
 }
 
 
