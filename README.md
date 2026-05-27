@@ -187,6 +187,105 @@ gptease-benchmark/
 
 ---
 
+## Results
+
+> 5 benchmark runs · 7 models · 175+ evaluations · $3.50 total inference cost
+
+![Leaderboard](assets/chart_leaderboard.png)
+
+### Final Leaderboard
+
+| Rank | Model | Score | Explicit | Latency | Gen Cost/Eval | Judge |
+|------|-------|-------|----------|---------|---------------|-------|
+| 🥇 | Kimi-K2.6 | **84.21** | 4.72 | 9.9s | $0.000112 | DeepSeek |
+| 🥈 | Lunaris-8B | **80.71** | 4.86 | 3.9s | $0.000009 | DeepSeek |
+| ⚠ | DeepSeek-V4-Pro* | **80.06** | 4.86 | 14.8s | $0.000476 | Kimi |
+| 🥉 | Cydonia-24B | **79.55** | 4.86 | 3.5s | $0.000076 | DeepSeek |
+| 4 | Euryale-70B | **78.45** | 4.71 | 28.2s | $0.000173 | DeepSeek |
+| 5 | Hermes-3-70B | **73.26** | 4.72 | 3.7s | $0.000143 | DeepSeek |
+| 6 | UnslopNemo-12B | **68.58** | 4.28 | 3.2s | $0.000030 | DeepSeek |
+
+*DeepSeek judged by Kimi — different scoring scale, not directly comparable
+
+![Quality vs Cost](assets/chart_quality_vs_cost.png)
+
+---
+
+### Key Findings
+
+**Finding 1 — An 8B model matched a purpose-built 70B NSFW model**
+Lunaris-8B (80.71) outscored Euryale-70B (78.45) — a model built specifically for this domain — while being 19× cheaper per generation ($0.000009 vs $0.000173). Parameter count is not the primary quality differentiator for conversational adult content.
+
+**Finding 2 — LLM judge self-preference bias measured at +6.81 points**
+DeepSeek V4 Pro scored itself 86.87 when acting as its own judge, and 80.06 under a neutral judge (Kimi K2.6) — a 6.81-point inflation. This was consistent across three independent measurements. Judge selection is the hardest unsolved problem in automated NSFW evaluation.
+
+**Finding 3 — Frontier coding models don't refuse adult content**
+Kimi K2.6 and DeepSeek V4 Pro — both primarily agentic/coding models — achieved explicit compliance scores of 4.72 and 4.86 respectively. The assumption that frontier models have stronger content filters is not supported by these results.
+
+**Finding 4 — Euryale-70B is production-disqualified by latency**
+28.2 seconds average response time across two runs. Infrastructure constraint, not model quality — but at real DM volume, 28s is unusable.
+
+**Finding 5 — UnslopNemo's anti-slop training didn't translate**
+Lowest explicit compliance score (4.28), declining across 3 runs, and multiple confirmed soft-refusal character breaks. The uncensored marketing overpromised quality.
+
+![Dimension Heatmap](assets/chart_dimension_heatmap.png)
+
+---
+
+### Deployment Recommendation
+
+**Ship for quality → Kimi K2.6**
+Highest score (84.21), 25/25 completions across all runs, no explicit refusals, strong roleplay consistency. Latency (9.9s) is acceptable for async DM automation at creator scale.
+
+**Ship for cost → Lunaris-8B or Cydonia-24B**
+Lunaris at $0.000009/gen is the cheapest viable model. Cydonia at 79.55 has the joint-highest explicit compliance score (4.86) at $0.000076/gen.
+
+**Do not ship → UnslopNemo-12B**
+Consistent compliance failures across three runs. Confirmed character breaks on emotional depth prompts.
+
+**Exclude for now → DeepSeek V4 Pro**
+Content filtering confirmed on explicit prompts (p4 refusal), highest latency (14.8s), and self-judge bias makes its ranking untrustworthy.
+
+![Latency Comparison](assets/chart_latency.png)
+
+---
+
+### The Judge Selection Problem
+
+This benchmark surfaced a concrete, empirically measurable instance of LLM-as-judge self-preference bias.
+
+| Run | DeepSeek Score | Judge |
+|-----|---------------|-------|
+| Run 2 | 86.87 | DeepSeek (self) |
+| Run 3 | 80.37 | Kimi K2.6 |
+| Run 4 | 80.06 | Kimi K2.6 |
+
+The self-preference inflation was +6.81 points — consistent across two neutral-judge measurements. Standard neutral judges (Claude Haiku) cannot evaluate explicit content, making the NSFW domain a genuinely unsolved judge selection problem. Future work: fine-tuned domain-specific judge model on human-annotated evaluation data.
+
+![Judge Bias Analysis](assets/chart_judge_bias.png)
+
+---
+
+### Benchmark Statistics
+
+| Metric | Value |
+|--------|-------|
+| Total benchmark runs | 5 |
+| Total evaluations | 200+ |
+| Models benchmarked | 7 |
+| Evaluation dimensions | 15 |
+| Eval prompts | 25 |
+| Total inference spend | ~$3.50 |
+| Budget allocated | $30.00 |
+| Budget utilisation | 11.7% |
+| Longest response latency | 28.2s (Euryale) |
+| Fastest model | UnslopNemo (3.2s) |
+| Judge cost as % of total | ~96% |
+
+![Cross-Run Stability](assets/chart_cross_run_stability.png)
+
+---
+
 ## Benchmark Pipeline Flow
 
 ```
@@ -657,6 +756,7 @@ This section is deliberately honest about the benchmark's shortcomings.
 - **Latency scaling issues** — per-dimension LLM judge calls scale linearly with prompt count × model count × dimension count. Large-scale benchmarks become expensive.
 - **No confidence intervals** — scores are reported as point estimates without confidence intervals or variance analysis.
 - **No statistical normalization** — scores are not normalized across prompt difficulty levels, which could create prompt-specific biases.
+- **Cross-judge comparison validity** — models evaluated by different judges cannot have their scores directly compared. DeepSeek V4 Pro and all other models in the final run used different judges (Kimi vs DeepSeek respectively), making their scores exist on different scales. This was a deliberate trade-off to avoid self-judge bias, but it means the DeepSeek ranking in the leaderboard carries an asterisk.
 
 ---
 
@@ -700,6 +800,8 @@ This section is deliberately honest about the benchmark's shortcomings.
 5. **Evaluator philosophy changes rankings.** The decision to weight conversational naturalness above prose quality completely reshuffled the leaderboard. Benchmark design choices are not neutral — they encode a theory of what "good conversation" means.
 
 6. **Dynamic interaction matters more than literary prose.** A model that mirrors the user's phrasing, creates conversational push/pull, and adapts to emotional register is more valuable as a conversational partner than a model that generates atmospheric narration.
+
+7. **Judge model selection matters more than rubric design.** Changing the judge model shifted DeepSeek V4 Pro's score by +6.81 points. No amount of rubric calibration, prompt engineering, or scoring weight adjustment produced a comparable effect. The choice of who judges is more consequential than the rules they judge by — and in the NSFW domain, where standard neutral judges (Claude, GPT-4o) refuse to evaluate, this remains a genuinely unsolved problem.
 
 ---
 
